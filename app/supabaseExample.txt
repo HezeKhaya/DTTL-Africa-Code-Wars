@@ -1,11 +1,9 @@
-// app/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { Box, Heading, List, ListItem, Spinner } from '@chakra-ui/react'
 
-// Define a type for our user for TypeScript
 type User = {
   id: number
   first_name: string
