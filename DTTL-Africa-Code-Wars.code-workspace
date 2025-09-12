@@ -18,8 +18,8 @@
 		},
 		"typescript.preferences.preferTypeOnlyAutoImports": true,
 		"editor.codeActionsOnSave": {
-			"source.fixAll.biome": "explicit",
-			"source.organizeImports": "always"
+			"source.organizeImports.biome": "explicit",
+			"source.fixAll.biome": "explicit"
 		}
 	},
 	"extensions": {
