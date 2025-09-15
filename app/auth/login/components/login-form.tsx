@@ -1,17 +1,16 @@
-import Link from "next/link";
-
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { login } from "@/lib/auth-actions";
 import {
+	Button,
 	Card,
 	CardBody,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-	Button,
 } from "@chakra-ui/react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { login } from "@/lib/auth-actions";
-import SignInWithGoogleButton from "./SignInWithGoogleButton";
+import Link from "next/link";
+import SignInWithGoogleButton from "./sign-in-with-google-button";
 
 export function LoginForm() {
 	return (

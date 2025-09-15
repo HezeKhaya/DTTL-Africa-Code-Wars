@@ -1,16 +1,15 @@
-import Link from "next/link";
-
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { signup } from "@/lib/auth-actions";
 import {
+	Button,
 	Card,
 	CardBody,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-	Button,
 } from "@chakra-ui/react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { signup } from "@/lib/auth-actions";
+import Link from "next/link";
 
 export function SignUpForm() {
 	return (
