@@ -34,30 +34,30 @@ export default async function Page() {
             <Checkbox.Label>Checkbox</Checkbox.Label>
           </Checkbox.Root>
 
-          <RadioGroup.Root display="inline-flex" defaultValue="1">
-            <RadioGroup.Item value="1" mr="2">
-              <RadioGroup.ItemHiddenInput />
-              <RadioGroup.ItemControl>
-                <RadioGroup.ItemIndicator />
-              </RadioGroup.ItemControl>
-              <RadioGroup.ItemText lineHeight="1">Radio</RadioGroup.ItemText>
-            </RadioGroup.Item>
+					<RadioGroup.Root display="inline-flex" defaultValue="1">
+						<RadioGroup.Item value="1" mr="2">
+							<RadioGroup.ItemHiddenInput />
+							<RadioGroup.ItemControl>
+								<RadioGroup.ItemIndicator />
+							</RadioGroup.ItemControl>
+							<RadioGroup.ItemText lineHeight="1">Radio</RadioGroup.ItemText>
+						</RadioGroup.Item>
 
-            <RadioGroup.Item value="2">
-              <RadioGroup.ItemHiddenInput />
-              <RadioGroup.ItemControl>
-                <RadioGroup.ItemIndicator />
-              </RadioGroup.ItemControl>
-              <RadioGroup.ItemText lineHeight="1">Radio</RadioGroup.ItemText>
-            </RadioGroup.Item>
-          </RadioGroup.Root>
-        </HStack>
+						<RadioGroup.Item value="2">
+							<RadioGroup.ItemHiddenInput />
+							<RadioGroup.ItemControl>
+								<RadioGroup.ItemIndicator />
+							</RadioGroup.ItemControl>
+							<RadioGroup.ItemText lineHeight="1">Radio</RadioGroup.ItemText>
+						</RadioGroup.Item>
+					</RadioGroup.Root>
+				</HStack>
 
-        <Progress.Root width="300px" value={65} striped>
-          <Progress.Track>
-            <Progress.Range />
-          </Progress.Track>
-        </Progress.Root>
+				<Progress.Root width="300px" value={65} striped>
+					<Progress.Track>
+						<Progress.Range />
+					</Progress.Track>
+				</Progress.Root>
 
         <HStack>
           <Button>Let's go!</Button>
@@ -66,11 +66,11 @@ export default async function Page() {
         </HStack>
       </VStack>
 
-      <Box pos="absolute" top="4" right="4">
-        <ClientOnly fallback={<Skeleton w="10" h="10" rounded="md" />}>
-          <ColorModeToggle />
-        </ClientOnly>
-      </Box>
-    </Box>
-  )
+			<Box pos="absolute" top="4" right="4">
+				<ClientOnly fallback={<Skeleton w="10" h="10" rounded="md" />}>
+					<ColorModeToggle />
+				</ClientOnly>
+			</Box>
+		</Box>
+	);
 }

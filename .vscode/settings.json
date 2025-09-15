@@ -1,4 +1,20 @@
 {
-  "typescript.tsdk": "../../node_modules/.pnpm/typescript@4.7.4/node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+	"biome.rename": true,
+	"editor.formatOnSave": true,
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"typescript.preferences.preferTypeOnlyAutoImports": true,
+	"editor.codeActionsOnSave": {
+		"source.organizeImports.biome": "explicit",
+		"source.fixAll.biome": "explicit"
+	},
+	"typescript.tsdk": "../../node_modules/.pnpm/typescript@4.7.4/node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true
 }
