@@ -1,5 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { login } from "@/lib/auth-actions";
 import {
 	Button,
@@ -8,11 +6,15 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
+	Field,
+	Input,
+	Stack,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import SignInWithGoogleButton from "./sign-in-with-google-button";
 
 export function LoginForm() {
+	const errors: Record<string, { message: string }> = {};
 	return (
 		<Card.Root className="mx-auto max-w-sm">
 			<CardHeader>
@@ -23,34 +25,27 @@ export function LoginForm() {
 			</CardHeader>
 			<CardBody>
 				<form action="">
-					<div className="grid gap-4">
-						<div className="grid gap-2">
-							<Label htmlFor="email">Email</Label>
+					<Stack>
+						<Field.Root invalid={!!errors.email}>
+							<Field.Label>Email</Field.Label>
 							<Input
-								id="email"
 								name="email"
 								type="email"
 								placeholder="m@example.com"
 								required
 							/>
-						</div>
-						<div className="grid gap-2">
-							<div className="flex items-center">
-								<Label htmlFor="password">Password</Label>
-								<Link
-									href="#"
-									className="ml-auto inline-block text-sm underline"
-								>
-									Forgot your password?
-								</Link>
-							</div>
-							<Input id="password" name="password" type="password" required />
-						</div>
+							<Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+						</Field.Root>
+						<Field.Root invalid={!!errors.password}>
+							<Field.Label>Password</Field.Label>
+							<Input name="password" type="password" required />
+							<Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+						</Field.Root>
 						<Button type="submit" formAction={login} className="w-full">
 							Login
 						</Button>
 						<SignInWithGoogleButton />
-					</div>
+					</Stack>
 				</form>
 				<div className="mt-4 text-center text-sm">
 					Don&apos;t have an account?{" "}

@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { signout } from "@/lib/auth-actions";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { signout } from "@/lib/auth-actions";
+import React, { useEffect, useState } from "react";
 
 const LoginButton = () => {
 	const [user, setUser] = useState<any>(null);
@@ -17,7 +17,8 @@ const LoginButton = () => {
 			setUser(user);
 		};
 		fetchUser();
-	}, []);
+	}, [supabase.auth.getUser])
+
 	if (user) {
 		return (
 			<Button

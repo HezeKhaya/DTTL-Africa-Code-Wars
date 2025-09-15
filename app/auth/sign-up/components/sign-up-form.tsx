@@ -1,5 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { signup } from "@/lib/auth-actions";
 import {
 	Button,
@@ -8,10 +6,14 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
+	Field,
+	Input,
+	Stack,
 } from "@chakra-ui/react";
 import Link from "next/link";
 
 export function SignUpForm() {
+	const errors: Record<string, { message: string }> = {};
 	return (
 		<Card.Root className="mx-auto max-w-sm">
 			<CardHeader>
@@ -22,45 +24,36 @@ export function SignUpForm() {
 			</CardHeader>
 			<CardBody>
 				<form action="">
-					<div className="grid gap-4">
-						<div className="grid grid-cols-2 gap-4">
-							<div className="grid gap-2">
-								<Label htmlFor="first-name">First name</Label>
-								<Input
-									name="first-name"
-									id="first-name"
-									placeholder="Max"
-									required
-								/>
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="last-name">Last name</Label>
-								<Input
-									name="last-name"
-									id="last-name"
-									placeholder="Robinson"
-									required
-								/>
-							</div>
-						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="email">Email</Label>
+					<Stack>
+						<Field.Root invalid={!!errors.firstName}>
+							<Field.Label>First Name</Field.Label>
+							<Input name="firstName" placeholder="Max" required />
+							<Field.ErrorText>{errors.firstName?.message}</Field.ErrorText>
+						</Field.Root>
+						<Field.Root invalid={!!errors.lastName}>
+							<Field.Label>First Name</Field.Label>
+							<Input name="lastName" placeholder="Robinson" required />
+							<Field.ErrorText>{errors.lastName?.message}</Field.ErrorText>
+						</Field.Root>
+						<Field.Root invalid={!!errors.email}>
+							<Field.Label>Email</Field.Label>
 							<Input
 								name="email"
-								id="email"
 								type="email"
 								placeholder="m@example.com"
 								required
 							/>
-						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="password">Password</Label>
-							<Input name="password" id="password" type="password" />
-						</div>
+							<Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+						</Field.Root>
+						<Field.Root invalid={!!errors.password}>
+							<Field.Label>Password</Field.Label>
+							<Input name="password" type="password" required />
+							<Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+						</Field.Root>
 						<Button formAction={signup} type="submit" className="w-full">
 							Create an account
 						</Button>
-					</div>
+					</Stack>
 				</form>
 				<div className="mt-4 text-center text-sm">
 					Already have an account?{" "}
