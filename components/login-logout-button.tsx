@@ -2,11 +2,12 @@
 import { signout } from "@/lib/auth-actions";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@chakra-ui/react";
+import type { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const LoginButton = () => {
-	const [user, setUser] = useState<any>(null);
+	const [user, setUser] = useState<User | null>(null);
 	const router = useRouter();
 	const supabase = createClient();
 	useEffect(() => {

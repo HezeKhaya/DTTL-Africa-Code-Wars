@@ -2,7 +2,6 @@
 
 import { signInWithGoogle } from "@/lib/auth-actions";
 import { Button } from "@chakra-ui/react";
-import React from "react";
 
 const SignInWithGoogleButton = () => {
 	return (
