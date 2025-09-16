@@ -1,10 +1,10 @@
+import UserGreetText from "@/components/user-greet-text";
 import {
 	Box,
 	Button,
 	Checkbox,
 	ClientOnly,
 	HStack,
-	Heading,
 	Progress,
 	RadioGroup,
 	Skeleton,
@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { ColorModeToggle } from "../components/color-mode-toggle";
+import LoginButton from "../components/login-logout-button";
 
 export default async function Page() {
 	return (
@@ -23,10 +24,7 @@ export default async function Page() {
 					width="80"
 					height="80"
 				/>
-				<Heading size="2xl" letterSpacing="tight">
-					Welcome to Chakra UI v3 + Next.js (App)
-				</Heading>
-
+				<UserGreetText />
 				<HStack gap="10">
 					<Checkbox.Root defaultChecked>
 						<Checkbox.HiddenInput />
@@ -64,6 +62,7 @@ export default async function Page() {
 				<HStack>
 					<Button>Let's go!</Button>
 					<Button variant="outline">bun install @chakra-ui/react</Button>
+					<LoginButton />
 				</HStack>
 			</VStack>
 

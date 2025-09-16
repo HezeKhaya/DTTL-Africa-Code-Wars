@@ -2,6 +2,10 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { getSupabaseConfig } from "./utils";
 
+export const config = {
+	runtime: "nodejs", // Enables Node.js runtime
+};
+
 export async function updateSession(request: NextRequest) {
 	const config = getSupabaseConfig();
 
