@@ -19,12 +19,10 @@ export function LoginForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardBody>
-				<form action="">
-					<Stack>
-						<SignInWithGoogleButton />
-						<SignInWithGitHubButton />
-					</Stack>
-				</form>
+				<Stack>
+					<SignInWithGoogleButton />
+					<SignInWithGitHubButton />
+				</Stack>
 			</CardBody>
 		</Card.Root>
 	);
