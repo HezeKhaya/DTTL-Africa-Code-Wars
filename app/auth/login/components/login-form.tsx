@@ -1,4 +1,6 @@
+import { signInWithGitHub, signInWithGoogle } from "@/lib/auth-actions";
 import {
+	Button,
 	Card,
 	CardBody,
 	CardDescription,
@@ -6,22 +8,24 @@ import {
 	CardTitle,
 	Stack,
 } from "@chakra-ui/react";
-import SignInWithGoogleButton from "./sign-in-with-google-button";
-import SignInWithGitHubButton from "./sign-in-with-github-button";
 
 export function LoginForm() {
 	return (
-		<Card.Root className="mx-auto max-w-sm">
+		<Card.Root>
 			<CardHeader>
-				<CardTitle className="text-2xl">Login</CardTitle>
+				<CardTitle>Login</CardTitle>
 				<CardDescription>
 					Select your preferred sign-in option below
 				</CardDescription>
 			</CardHeader>
 			<CardBody>
 				<Stack>
-					<SignInWithGoogleButton />
-					<SignInWithGitHubButton />
+					<Button type="button" variant="outline" onClick={signInWithGoogle}>
+						Login with Google
+					</Button>
+					<Button type="button" variant="outline" onClick={signInWithGitHub}>
+						Login with GitHub
+					</Button>
 				</Stack>
 			</CardBody>
 		</Card.Root>

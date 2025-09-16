@@ -83,11 +83,10 @@ export async function signInWithGoogle() {
 		redirect("/auth/error");
 	}
 
-	console.log("Google sign-in data:", data);
 	redirect(data.url);
 }
 
-export async function signInWithGitHub(){
+export async function signInWithGitHub() {
 	const supabase = await createClient();
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider: "github",
@@ -99,7 +98,7 @@ export async function signInWithGitHub(){
 				access_type: "offline",
 				prompt: "consent",
 			},
-		}
+		},
 	});
 
 	if (error) {
@@ -107,6 +106,5 @@ export async function signInWithGitHub(){
 		redirect("/auth/error");
 	}
 
-	console.log("GitHub sign-in data:", data);
 	redirect(data.url);
 }
