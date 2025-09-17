@@ -1,12 +1,8 @@
 import UserGreetText from "@/components/user-greet-text";
 import {
 	Box,
-	Button,
-	Checkbox,
 	ClientOnly,
 	HStack,
-	Progress,
-	RadioGroup,
 	Skeleton,
 	Text,
 	VStack,
