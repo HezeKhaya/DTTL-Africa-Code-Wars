@@ -6,11 +6,14 @@
 		"dev": "next",
 		"build": "next build",
 		"start": "next start",
+		"format": "npx @biomejs/biome format --write .",
+		"lint": "npx @biomejs/biome lint .",
 		"type-check": "tsc"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "*",
 		"@emotion/react": "^11.14.0",
+		"@supabase/ssr": "^0.7.0",
 		"@supabase/supabase-js": "^2.57.2",
 		"next": "^15.3.4",
 		"next-themes": "^0.4.6",

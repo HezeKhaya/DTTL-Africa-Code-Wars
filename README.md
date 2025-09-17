@@ -1,75 +1,68 @@
-# TypeScript Next.js Chakra example
+# DTTL Africa Code Wars
 
-This is a really simple project that shows the usage of Next.js with TypeScript.
+Welcome to the DTTL Africa Code Wars repository! This application aims to create a platform that allows teams of code warriors to register for and participate in curated contests that will test their coding mettle 😎
 
-## Deploy your own
+## Collaborating
 
-Deploy the example using [Vercel](https://vercel.com):
+Reach out to [HezeKhaya](https://github.com/HezeKhaya) to request access to the repository.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/with-typescript)
+## Platform
 
-## How to use it?
+### Framework
 
-### Using `create-next-app`
+The application uses the [Next.js](https://nextjs.org/) framework. Next.js was chosen to give contributors and opportunity to try out this popular web framework.
 
-Execute
-[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app)
-with [npm](https://docs.npmjs.com/cli/init) or
-[Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+### Development Platform
 
-```bash
-npx create-next-app --example with-typescript with-typescript-app
-# or
-yarn create next-app --example with-typescript with-typescript-app
+We are using [Supabase](https://supabase.com/) as a platform for authentication and as a database. Supbase is a popular platform built on Postgres.
+
+### Technologies
+
+The last notable items in our long list of awesome tech are:
+
+#### Chakra UI
+
+[Chakra UI](https://www.chakra-ui.com/) is a modern component library that allows you to create rich UIs using composable components.
+
+#### Kysely
+
+[Kysely](https://www.kysely.dev/) is a light-weight ORM with type-safe goodness.
+
+#### Biome.js
+
+[Biome.js](https://biomejs.dev/) is a modern formatter and linter built on Rust, making it lightning fast compared to its competitors.
+
+## CI/CD
+
+To keep things simple, the app is hosted on [Vercel](https://vercel.com). Vercel provides automated CI/CD integration with Github, so any pushes to main will deploy to production. The production site can be accessed [here](https://dttl-africa-code-wars-katas.vercel.app/).
+
+When you create a new pull request, Vercel will also create preview deployments for the branch that you want to merge. Check out the pull request or the [deployments page](https://github.com/HezeKhaya/DTTL-Africa-Code-Wars/deployments) to access these previews and test drive the changes!
+
+## Getting Started
+
+### Install Packages
+
+### Setup Supabase for Local Development
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and make sure that it is running.
+2. Install the Supabase CLI:
+
+```sh
+npm install supabase --save-dev
 ```
 
-### Download manually
+3. In your repo, initialize the Supabase project:
 
-Download the example:
-
-```bash
-curl https://codeload.github.com/vercel/next.js/tar.gz/canary | tar -xz --strip=2 next.js-canary/examples/with-typescript
-cd with-typescript
+```sh
+npx supabase init
 ```
 
-Install it and run:
+4. Start the Supabase stack:
 
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
+```sh
+npx supabase start
 ```
 
-Deploy it to the cloud with
-[Vercel](https://vercel.com/import?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example)
-([Documentation](https://nextjs.org/docs/deployment)).
+5. View your local Supabase instance at [http://localhost:54323](http://localhost:54323).
 
-## Notes
-
-This example shows how to integrate the TypeScript type system into Next.js.
-Since TypeScript is supported out of the box with Next.js, all we have to do is
-to install TypeScript.
-
-```
-npm install --save-dev typescript
-```
-
-To enable TypeScript's features, we install the type declarations for React and
-Node.
-
-```
-npm install --save-dev @types/react @types/react-dom @types/node
-```
-
-When we run `next dev` the next time, Next.js will start looking for any `.ts`
-or `.tsx` files in our project and builds it. It even automatically creates a
-`tsconfig.json` file for our project with the recommended settings.
-
-Next.js has built-in TypeScript declarations, so we'll get autocompletion for
-Next.js' modules straight away.
-
-A `type-check` script is also added to `package.json`, which runs TypeScript's
-`tsc` CLI in `noEmit` mode to run type-checking separately. You can then include
-this, for example, in your `test` scripts.
+Reference: [Supabase Local Development](https://supabase.com/docs/guides/local-development)

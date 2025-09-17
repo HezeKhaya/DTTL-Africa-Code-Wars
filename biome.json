@@ -15,7 +15,16 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"correctness": {
+				"useUniqueElementIds": {
+				"options": {
+					"excludedComponents": [
+					"FormattedMessage"
+					]
+				}
+				}
+			}
 		}
 	},
 	"javascript": {
@@ -27,7 +36,12 @@
 		"enabled": true,
 		"actions": {
 			"source": {
-				"organizeImports": "on"
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": ["@/**"]
+					}
+				}
 			}
 		}
 	}
