@@ -14,6 +14,7 @@
 		"prebuild": "npm run generate-barrels && npm run generate-theme && npm run lint"
 	},
 	"dependencies": {
+		"@casl/ability": "^6.7.3",
 		"@chakra-ui/react": "*",
 		"@emotion/react": "^11.14.0",
 		"@supabase/ssr": "^0.7.0",
@@ -25,7 +26,8 @@
 		"postgres": "^3.4.7",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-icons": "5.5.0"
+		"react-icons": "5.5.0",
+		"zod": "^4.1.9"
 	},
 	"repository": {
 		"type": "git",
