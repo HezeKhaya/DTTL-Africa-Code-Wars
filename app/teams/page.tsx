@@ -2,6 +2,7 @@
 
 import {
 	Button,
+	Center,
 	Flex,
 	Heading,
 	HStack,
@@ -13,7 +14,7 @@ import { FaPlus, FaUsers } from "react-icons/fa";
 
 export default function FindTeamPage() {
 	return (
-		<Flex minHeight="100vh" align="center" justify="center">
+		<Center minH="full">
 			<VStack gap={12}>
 				<Heading as="h1" size="2xl">
 					Find a Team
@@ -33,6 +34,6 @@ export default function FindTeamPage() {
 					</Button>
 				</HStack>
 			</VStack>
-		</Flex>
+		</Center>
 	);
 }

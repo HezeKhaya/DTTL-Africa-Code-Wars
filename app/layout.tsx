@@ -1,4 +1,6 @@
+import { Container, Flex, Spacer } from "@chakra-ui/react";
 import { Inter } from "next/font/google";
+import { Header } from "./header";
 import Provider from "./provider";
 
 const inter = Inter({
@@ -15,7 +17,19 @@ export default function RootLayout({
 		<html lang="en-ZA" className={inter.className} suppressHydrationWarning>
 			<head />
 			<body>
-				<Provider>{children}</Provider>
+				<Provider>
+					<Flex flexDir="column" justifyContent="stretch" minH="100svh">
+						<Header />
+						<Container
+							display="flex"
+							justifyContent="center"
+							py={20}
+							flexGrow={1}
+						>
+							{children}
+						</Container>
+					</Flex>
+				</Provider>
 			</body>
 		</html>
 	);
