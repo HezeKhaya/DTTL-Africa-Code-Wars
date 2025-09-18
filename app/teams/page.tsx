@@ -19,7 +19,7 @@ export default function FindTeamPage() {
 				<Heading as="h1" size="2xl">
 					Find a Team
 				</Heading>
-				<HStack gap={8}>
+				<HStack gap={8} flexWrap="wrap" align="center" justify="center">
 					<Button size="menu">
 						<Icon as={FaPlus} boxSize={12} color="teal.solid" />
 						<Text fontSize="xl" fontWeight="semibold">

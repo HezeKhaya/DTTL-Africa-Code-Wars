@@ -18,8 +18,8 @@ export const Header = () => {
 			colorPalette="gray"
 			position="sticky"
 			zIndex="sticky"
-			layerStyle="frostedGlass"
 			py={4}
+			bg="bg"
 		>
 			<Container>
 				<Flex as="nav" align="center" gap={4}>
