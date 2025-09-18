@@ -7,13 +7,6 @@ import type { Database } from "./database";
 
 export const database = new Kysely<KyselifyDatabase<Database>>({
 	dialect: new PostgresJSDialect({
-		postgres: postgres({
-			database: getEnvironmentVariable("DATABASE_NAME"),
-			host: getEnvironmentVariable("DATABASE_HOST"),
-			max: 10,
-			port: Number.parseInt(getEnvironmentVariable("DATABASE_PORT"), 10),
-			user: getEnvironmentVariable("DATABASE_USER"),
-			password: getEnvironmentVariable("DATABASE_PASSWORD"),
-		}),
+		postgres: postgres(getEnvironmentVariable("DATABASE_URL")),
 	}),
 });
