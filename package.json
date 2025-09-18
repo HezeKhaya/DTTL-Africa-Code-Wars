@@ -8,7 +8,9 @@
 		"start": "next start",
 		"format": "npx @biomejs/biome format --write .",
 		"lint": "npx @biomejs/biome lint .",
-		"type-check": "tsc"
+		"type-check": "tsc",
+    	"generate-barrels": "barrelsby --delete --config ./barrelsby.json",
+		"generate-theme": "npx @chakra-ui/cli typegen ./theme.ts"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "*",
@@ -35,6 +37,7 @@
 		"@types/node": "^24.3.1",
 		"@types/react": "^19.1.12",
 		"@types/react-dom": "^19.1.9",
+		"barrelsby": "^2.8.1",
 		"typescript": "^5.9.2"
 	}
 }

@@ -1,64 +1,37 @@
 "use client";
 
-import { Flex, Heading, HStack, Icon, Text, VStack } from "@chakra-ui/react";
+import {
+	Button,
+	Flex,
+	Heading,
+	HStack,
+	Icon,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
 import { FaPlus, FaUsers } from "react-icons/fa";
 
 export default function FindTeamPage() {
 	return (
-		<Flex minHeight="100vh" align="center" justify="center" bg="gray.subtle">
+		<Flex minHeight="100vh" align="center" justify="center">
 			<VStack gap={12}>
-				<Heading as="h1" size="2xl" color="gray.fg">
+				<Heading as="h1" size="2xl">
 					Find a Team
 				</Heading>
-
 				<HStack gap={8}>
-					<Flex
-						as="button"
-						direction="column"
-						align="center"
-						justify="center"
-						p={10}
-						w="250px"
-						h="200px"
-						bg="white"
-						border="2px"
-						borderRadius="xl"
-						boxShadow="md"
-						transition="all 0.2s ease-in-out"
-						_hover={{
-							boxShadow: "xl",
-							transform: "translateY(-5px)",
-						}}
-					>
-						<Icon as={FaPlus} boxSize={12} color="teal.focusRing" />
-						<Text mt={4} fontSize="xl" fontWeight="semibold" color="fg.muted">
+					<Button size="menu">
+						focusRing
+						<Icon as={FaPlus} boxSize={12} color="teal.solid" />
+						<Text fontSize="xl" fontWeight="semibold">
 							Create Team
 						</Text>
-					</Flex>
-
-					<Flex
-						as="button"
-						direction="column"
-						align="center"
-						justify="center"
-						p={10}
-						w="250px"
-						h="200px"
-						bg="white"
-						border="2px"
-						borderRadius="xl"
-						boxShadow="md"
-						transition="all 0.2s ease-in-out"
-						_hover={{
-							boxShadow: "xl",
-							transform: "translateY(-5px)",
-						}}
-					>
+					</Button>
+					<Button size="menu">
 						<Icon as={FaUsers} boxSize={12} color="purple.focusRing" />
-						<Text mt={4} fontSize="xl" fontWeight="semibold" color="fg.muted">
+						<Text fontSize="xl" fontWeight="semibold">
 							Join Team
 						</Text>
-					</Flex>
+					</Button>
 				</HStack>
 			</VStack>
 		</Flex>

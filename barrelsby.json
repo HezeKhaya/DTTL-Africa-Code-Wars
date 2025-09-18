@@ -1,0 +1,10 @@
+{
+  "directory": [
+    "./components",
+    "./recipes"
+  ],
+  "barrelName": "index.ts",
+  "delete": true,
+  "singleQuotes": true,
+  "noHeader": true
+}
