@@ -18,11 +18,11 @@
 			"recommended": true,
 			"correctness": {
 				"useUniqueElementIds": {
-				"options": {
-					"excludedComponents": [
-					"FormattedMessage"
-					]
-				}
+					"options": {
+						"excludedComponents": [
+							"FormattedMessage"
+						]
+					}
 				}
 			}
 		}
@@ -39,7 +39,9 @@
 				"organizeImports": {
 					"level": "on",
 					"options": {
-						"groups": ["@/**"]
+						"groups": [
+							"@/**"
+						]
 					}
 				}
 			}
