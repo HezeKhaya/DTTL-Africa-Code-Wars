@@ -5,7 +5,7 @@ import { FaPlus, FaUsers } from "react-icons/fa";
 
 export default function FindTeamPage() {
 	return (
-		<Flex minHeight="100vh" align="center" justify="center" bg="gray.subtle">
+		<Flex minHeight="vh" align="center" justify="center" bg="gray.subtle">
 			<VStack gap={12}>
 				<Heading as="h1" size="2xl" color="gray.fg">
 					Find a Team
@@ -18,10 +18,10 @@ export default function FindTeamPage() {
 						align="center"
 						justify="center"
 						p={10}
-						w="250px"
-						h="200px"
+						w="64"
+						h="52"
 						bg="white"
-						border="2px"
+						border="0.5"
 						borderRadius="xl"
 						boxShadow="md"
 						transition="all 0.2s ease-in-out"
@@ -42,10 +42,10 @@ export default function FindTeamPage() {
 						align="center"
 						justify="center"
 						p={10}
-						w="250px"
-						h="200px"
+						w="64"
+						h="52"
 						bg="white"
-						border="2px"
+						border="0.5"
 						borderRadius="xl"
 						boxShadow="md"
 						transition="all 0.2s ease-in-out"
