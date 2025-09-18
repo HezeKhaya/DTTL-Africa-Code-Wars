@@ -20,7 +20,6 @@ export default function FindTeamPage() {
 				</Heading>
 				<HStack gap={8}>
 					<Button size="menu">
-						focusRing
 						<Icon as={FaPlus} boxSize={12} color="teal.solid" />
 						<Text fontSize="xl" fontWeight="semibold">
 							Create Team
