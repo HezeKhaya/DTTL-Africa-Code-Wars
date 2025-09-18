@@ -5,9 +5,9 @@ import { FaPlus, FaUsers } from "react-icons/fa";
 
 export default function FindTeamPage() {
 	return (
-		<Flex minHeight="100vh" align="center" justify="center" bg="gray.50">
+		<Flex minHeight="100vh" align="center" justify="center" bg="gray.subtle">
 			<VStack gap={12}>
-				<Heading as="h1" size="2xl" color="gray.700">
+				<Heading as="h1" size="2xl" color="gray.fg">
 					Find a Team
 				</Heading>
 
@@ -22,7 +22,6 @@ export default function FindTeamPage() {
 						h="200px"
 						bg="white"
 						border="2px"
-						borderColor="teal.400"
 						borderRadius="xl"
 						boxShadow="md"
 						transition="all 0.2s ease-in-out"
@@ -31,8 +30,8 @@ export default function FindTeamPage() {
 							transform: "translateY(-5px)",
 						}}
 					>
-						<Icon as={FaPlus} boxSize={12} color="teal.500" />
-						<Text mt={4} fontSize="xl" fontWeight="semibold" color="gray.600">
+						<Icon as={FaPlus} boxSize={12} color="teal.focusRing" />
+						<Text mt={4} fontSize="xl" fontWeight="semibold" color="fg.muted">
 							Create Team
 						</Text>
 					</Flex>
@@ -47,7 +46,6 @@ export default function FindTeamPage() {
 						h="200px"
 						bg="white"
 						border="2px"
-						borderColor="purple.400"
 						borderRadius="xl"
 						boxShadow="md"
 						transition="all 0.2s ease-in-out"
@@ -56,8 +54,8 @@ export default function FindTeamPage() {
 							transform: "translateY(-5px)",
 						}}
 					>
-						<Icon as={FaUsers} boxSize={12} color="purple.500" />
-						<Text mt={4} fontSize="xl" fontWeight="semibold" color="gray.600">
+						<Icon as={FaUsers} boxSize={12} color="purple.focusRing" />
+						<Text mt={4} fontSize="xl" fontWeight="semibold" color="fg.muted">
 							Join Team
 						</Text>
 					</Flex>
