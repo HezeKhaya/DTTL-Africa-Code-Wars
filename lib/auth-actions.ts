@@ -35,7 +35,6 @@ export async function signInWithGoogle() {
 		redirect("/auth/error");
 	}
 
-	console.log("CALLBACK URL:", data.url);
 	redirect(data.url);
 }
 
