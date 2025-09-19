@@ -1,51 +1,83 @@
+import type { Event, Team } from "@/database/models";
 import {
-	type AbilityTuple,
-	defineAbility,
-	type MongoAbility,
+	AbilityBuilder,
+	createMongoAbility,
+	type InferSubjects,
+	type MongoQuery,
+	type PureAbility,
 } from "@casl/ability";
 import { z } from "zod";
-import { createClient } from "../supabase/server";
 
 const schema = z.object({
-	app_metadata: z.object({
-		admin: z.coerce.boolean(),
-		roles: z
-			.object({ captain: z.array(z.guid()), member: z.array(z.guid()) })
-			.partial(),
+	claims: z.object({
+		app_metadata: z.object({
+			admin: z.coerce.boolean(),
+			roles: z
+				.object({ captain: z.array(z.guid()), member: z.array(z.guid()) })
+				.partial(),
+		}),
 	}),
 });
 
-const defaultClaim: z.infer<typeof schema>["app_metadata"] = {
+export type AppClaim = z.infer<typeof schema>["claims"]["app_metadata"];
+
+const defaultClaim: AppClaim = {
 	admin: false,
 	roles: { captain: [], member: [] },
 };
 
-type AppSubject = "Team" | "all" | "Event";
-type AppAbilities = "manage" | "read";
-type AppAbility = MongoAbility<AbilityTuple<AppAbilities, AppSubject>>;
+export type RawClaim =
+	| {
+			[key: string]: unknown;
+	  }
+	| z.infer<typeof schema>;
 
-export async function getAbilities(): Promise<
-	ReturnType<typeof defineAbility<AppAbility>>
-> {
-	const supabase = await createClient();
+type SubjectUnion = Event | Team;
+type Subjects = InferSubjects<SubjectUnion, true> | "all";
+type Actions = "create" | "read" | "update" | "delete";
+type AppAbility = PureAbility<[Actions, Subjects], MongoQuery<SubjectUnion>>;
 
-	const { data } = await supabase.auth.getClaims();
+export const CRUDActions: Actions[] = ["create", "read", "update", "delete"];
 
-	const claims = data ? schema.parse(data.claims).app_metadata : defaultClaim;
+export function getAbilities(rawClaims: RawClaim | undefined): AppAbility {
+	const isLoggedIn = !!rawClaims;
 
-	return defineAbility<AppAbility>((can, _) => {
-		if (claims.admin) {
-			can("manage", "all");
-			can("read", "all");
-		}
+	const parseResult = schema.safeParse(rawClaims);
 
-		for (const teamId of claims.roles.captain ?? []) {
-			can("manage", "Team", teamId);
-			can("read", "Team", teamId);
-		}
+	const claims = parseResult.success
+		? parseResult.data.claims.app_metadata
+		: defaultClaim;
 
-		for (const teamId of claims.roles.member ?? []) {
-			can("read", "Team", teamId);
-		}
+	const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
+
+	if (isLoggedIn) {
+		can("create", "Team");
+		can("read", "Event");
+	}
+
+	if (claims.admin) {
+		can(CRUDActions, "Team");
+		can(CRUDActions, "Event");
+	}
+
+	for (const teamId of claims.roles.captain ?? []) {
+		can("read", "Team", { id: teamId });
+		can("update", "Team", { id: teamId });
+	}
+
+	for (const teamId of claims.roles.member ?? []) {
+		can("read", "Team", { id: teamId });
+	}
+
+	return build({
+		detectSubjectType: (subject) => {
+			if ((subject as Partial<Team>).event_id) {
+				return "Team";
+			} else if ((subject as Partial<Event>).start_date) {
+				return "Event";
+			}
+
+			return "all";
+		},
 	});
 }

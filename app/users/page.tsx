@@ -1,12 +1,17 @@
 import { database } from "@/database";
 import { getAbilities } from "@/lib/auth/get-abilities";
+import { createClient } from "@/lib/supabase/server";
 import { List, ListItem } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 
 export default async function UsersPage() {
-	const abilities = await getAbilities();
+	const supabase = await createClient();
 
-	if (abilities.cannot("manage", "all")) {
+	const claimCollection = await supabase.auth.getClaims();
+
+	const abilities = getAbilities(claimCollection?.data?.claims);
+
+	if (abilities.cannot("read", "all")) {
 		return notFound();
 	}
 
