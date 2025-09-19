@@ -24,6 +24,11 @@
 		"cSpell.words": ["Kysely"]
 	},
 	"extensions": {
-		"recommendations": ["biomejs.biome"]
+		"recommendations": [
+			"biomejs.biome",
+			"vitest.explorer",
+			"streetsidesoftware.code-spell-checker",
+			"mikestead.dotenv"
+		]
 	}
 }
