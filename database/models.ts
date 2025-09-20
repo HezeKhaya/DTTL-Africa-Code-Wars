@@ -1,4 +1,4 @@
-import type { Database } from "./database";
+import type { Database } from "./types";
 
 export type Team = Database["public"]["Tables"]["teams"]["Row"] & {
 	kind: "Team";

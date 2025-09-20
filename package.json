@@ -12,7 +12,7 @@
     "type-check": "tsc",
     "generate-barrels": "barrelsby --delete --config ./barrelsby.json",
     "generate-theme": "npx @chakra-ui/cli typegen ./theme.ts",
-    "generate-db-types": "npx supabase gen types --linked --lang=typescript > database/database.d.ts",
+    "generate-db-types": "npx supabase gen types --linked --lang=typescript > database/types.ts",
     "prebuild": "npm run generate-barrels && npm run generate-theme && npm run lint"
   },
   "dependencies": {
