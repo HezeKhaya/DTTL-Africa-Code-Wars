@@ -1,8 +1,7 @@
 import type { Database } from "./types";
 
-export type Team = Database["public"]["Tables"]["teams"]["Row"] & {
-	kind: "Team";
-};
-export type Event = Database["public"]["Tables"]["events"]["Row"] & {
-	kind: "Event";
-};
+export type DatabaseType<T extends keyof Database["public"]["Tables"]> =
+	Database["public"]["Tables"][T]["Row"];
+
+export type Team = DatabaseType<"teams">;
+export type Event = DatabaseType<"events">;

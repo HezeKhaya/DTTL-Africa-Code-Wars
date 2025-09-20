@@ -32,7 +32,7 @@ export type RawClaim =
 	  }
 	| z.infer<typeof schema>;
 
-type SubjectUnion = Event | Team;
+type SubjectUnion = (Event & { kind: "Event" }) | (Team & { kind: "Team" });
 type Subjects = InferSubjects<SubjectUnion, true> | "all";
 type Actions = "create" | "read" | "update" | "delete";
 type AppAbility = PureAbility<[Actions, Subjects], MongoQuery<SubjectUnion>>;
