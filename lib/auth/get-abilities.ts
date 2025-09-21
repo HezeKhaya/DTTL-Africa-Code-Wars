@@ -32,12 +32,15 @@ export type RawClaim =
 	  }
 	| z.infer<typeof schema>;
 
-type SubjectUnion = (Event & { kind: "Event" }) | (Team & { kind: "Team" });
-type Subjects = InferSubjects<SubjectUnion, true> | "all";
-type Actions = "create" | "read" | "update" | "delete";
-type AppAbility = PureAbility<[Actions, Subjects], MongoQuery<SubjectUnion>>;
+type SubjectUnion = Event | Team | "Event" | "Team";
+export type AppSubjects = InferSubjects<SubjectUnion, true> | "all";
+export type AppActions = "create" | "read" | "update" | "delete";
+export type AppAbility = PureAbility<
+	[AppActions, AppSubjects],
+	MongoQuery<SubjectUnion>
+>;
 
-export const CRUDActions: Actions[] = ["create", "read", "update", "delete"];
+export const CRUDActions: AppActions[] = ["create", "read", "update", "delete"];
 
 export function getAbilities(rawClaims: RawClaim | undefined): AppAbility {
 	const isLoggedIn = !!rawClaims;

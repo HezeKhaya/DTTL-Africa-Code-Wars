@@ -1,6 +1,7 @@
 "use client";
 
-import { getAbilities } from "@/lib/auth/get-abilities";
+import { type AppAbility, getAbilities } from "@/lib/auth/get-abilities";
+import { createMongoAbility } from "@casl/ability";
 import {
 	createContext,
 	type PropsWithChildren,
@@ -8,8 +9,8 @@ import {
 	useMemo,
 } from "react";
 
-const AbilityContext = createContext<ReturnType<typeof getAbilities> | null>(
-	null,
+const AbilityContext = createContext<AppAbility>(
+	createMongoAbility<AppAbility>(),
 );
 
 export function AbilityProvider({
@@ -26,4 +27,4 @@ export function AbilityProvider({
 	);
 }
 
-export const useAbilities = () => useContext(AbilityContext);
+export const useAbility = () => useContext(AbilityContext);

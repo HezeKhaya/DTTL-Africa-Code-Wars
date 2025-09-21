@@ -4,7 +4,7 @@ import theme from "@/theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
-import { AbilityProvider } from "./components/abilities-context";
+import { AbilityProvider } from "../components/auth/ability-context";
 
 export default function RootProviders({
 	children,

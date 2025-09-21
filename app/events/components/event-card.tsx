@@ -1,9 +1,10 @@
 import type { Event } from "@/database/models";
-import { Box, Button, Card, Center, Heading, Text } from "@chakra-ui/react";
+import { Box, Card, Center, Heading, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Image from "next/image";
+import { EventButtons } from "./event-buttons";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
@@ -50,7 +51,7 @@ export function EventCard({ event }: { event: Event | undefined }) {
 				<Card.Description textStyle="md">{event.blurb}</Card.Description>
 			</Card.Body>
 			<Card.Footer>
-				<Button>Test</Button>
+				<EventButtons event={event} />
 			</Card.Footer>
 		</Card.Root>
 	);

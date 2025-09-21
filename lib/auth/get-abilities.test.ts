@@ -1,4 +1,4 @@
-import type { Team } from "@/database/models";
+import type { Event, Team } from "@/database/models";
 import { describe, expect, test } from "vitest";
 import { CRUDActions, getAbilities, type RawClaim } from "./get-abilities";
 
@@ -6,12 +6,17 @@ describe("getAbilities", () => {
 	const stubTeam = {
 		id: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
 		event_id: 1,
-	} as Team;
+	} as unknown as Team;
 
 	const stubOtherTeam = {
 		id: "ffffffff-ffff-ffff-ffff-ffffffffffff",
 		event_id: 1,
-	} as Team;
+	} as unknown as Team;
+
+	const stubEvent = {
+		id: "ffffffff-ffff-ffff-ffff-ffffffffffff",
+		start_date: new Date().toISOString(),
+	} as unknown as Event;
 
 	const stubAuthorizedClaims: RawClaim = {
 		claims: { app_metadata: { admin: false, roles: {} } },
@@ -48,6 +53,15 @@ describe("getAbilities", () => {
 		for (const action of CRUDActions) {
 			expect(result.can(action, "Event")).toBeTruthy();
 			expect(result.can(action, "Team")).toBeTruthy();
+		}
+	});
+
+	test("is should allow all actions on an object for admin users", () => {
+		const result = getAbilities(stubAdminClaims);
+
+		for (const action of CRUDActions) {
+			expect(result.can(action, stubTeam)).toBeTruthy();
+			expect(result.can(action, stubEvent)).toBeTruthy();
 		}
 	});
 

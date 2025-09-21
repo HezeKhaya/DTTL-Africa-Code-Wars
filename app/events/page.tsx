@@ -12,7 +12,6 @@ dayjs.extend(isSameOrAfter);
 
 export default async function UsersPage() {
 	const supabase = await createClient();
-
 	const claimCollection = await supabase.auth.getClaims();
 
 	const abilities = getAbilities(claimCollection?.data?.claims);
@@ -21,7 +20,26 @@ export default async function UsersPage() {
 		return notFound();
 	}
 
-	const data = await database.selectFrom("events").selectAll().execute();
+	const userResponse = await supabase.auth.getUser();
+
+	if (userResponse.error) {
+		throw new Error(userResponse.error.message);
+	}
+
+	const data = await database
+		.selectFrom("events")
+		.leftJoin(
+			(eb) =>
+				eb
+					.selectFrom("teams")
+					.innerJoin("user_teams", "id", "team_id")
+					.where("user_teams.user_id", "=", userResponse.data.user.id)
+					.select(["event_id", "team_id", "teams.name as team_name"])
+					.as("user_teams"),
+			(join) => join.onRef("event_id", "=", "events.id"),
+		)
+		.selectAll()
+		.execute();
 
 	const nextEvent = getNext(data);
 	const pastEvents = getPastTen(data);
