@@ -1,4 +1,4 @@
-import type { Event } from "@/database/models";
+import type { Event } from "@/prisma/types";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { filter, firstBy, pipe, prop, sortBy, take } from "remeda";

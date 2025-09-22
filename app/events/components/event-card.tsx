@@ -1,4 +1,4 @@
-import type { Event } from "@/database/models";
+import type { Event } from "@/prisma/types";
 import { Box, Card, Center, Heading, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";

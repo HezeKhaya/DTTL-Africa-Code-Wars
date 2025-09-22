@@ -3,6 +3,7 @@
 		"biomejs.biome",
 		"vitest.explorer",
 		"streetsidesoftware.code-spell-checker",
-		"mikestead.dotenv"
+		"mikestead.dotenv",
+		"prisma.prisma"
 	]
 }

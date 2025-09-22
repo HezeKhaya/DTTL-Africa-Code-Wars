@@ -1,4 +1,4 @@
-import type { Event, Team } from "@/database/models";
+import type { Event, Team } from "@/prisma/types";
 import {
 	AbilityBuilder,
 	createMongoAbility,

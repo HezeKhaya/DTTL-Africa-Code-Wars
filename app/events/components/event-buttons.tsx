@@ -1,5 +1,5 @@
 import { Can } from "@/components/auth/can";
-import type { Event } from "@/database/models";
+import type { Event } from "@/prisma/types";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 
 export function EventButtons({ event }: { event: Event }) {

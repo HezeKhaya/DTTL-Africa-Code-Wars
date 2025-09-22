@@ -1,4 +1,4 @@
-import { database } from "@/database";
+import { PrismaClient } from "@/generated/prisma";
 import { getAbilities } from "@/lib/auth/get-abilities";
 import { createClient } from "@/lib/supabase/server";
 import { Grid, GridItem, List, ListItem } from "@chakra-ui/react";
@@ -26,20 +26,23 @@ export default async function UsersPage() {
 		throw new Error(userResponse.error.message);
 	}
 
-	const data = await database
-		.selectFrom("events")
-		.leftJoin(
-			(eb) =>
-				eb
-					.selectFrom("teams")
-					.innerJoin("user_teams", "id", "team_id")
-					.where("user_teams.user_id", "=", userResponse.data.user.id)
-					.select(["event_id", "team_id", "teams.name as team_name"])
-					.as("user_teams"),
-			(join) => join.onRef("event_id", "=", "events.id"),
-		)
-		.selectAll()
-		.execute();
+	const user_id = userResponse.data.user.id;
+
+	const prismaClient = new PrismaClient();
+
+	const data = await prismaClient.events.findMany({
+		include: {
+			teams: {
+				where: {
+					user_teams: {
+						some: {
+							user_id,
+						},
+					},
+				},
+			},
+		},
+	});
 
 	const nextEvent = getNext(data);
 	const pastEvents = getPastTen(data);
