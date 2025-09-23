@@ -1,15 +1,18 @@
-import type { Event } from "@/prisma/types";
+import type { EventWithUserTeam } from "@/prisma/queries/get-events-with-user-teams";
 import { Box, Card, Center, Heading, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import Image from "next/image";
 import { EventButtons } from "./event-buttons";
 
-dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 
-export function EventCard({ event }: { event: Event | undefined }) {
+type EventCardProps = { event: EventWithUserTeam | undefined } & Pick<
+	Card.RootProps,
+	"flexGrow"
+>;
+
+export function EventCard({ event, ...rest }: EventCardProps) {
 	if (!event) {
 		return (
 			<Center>
@@ -19,7 +22,7 @@ export function EventCard({ event }: { event: Event | undefined }) {
 	}
 
 	return (
-		<Card.Root minW="full" aspectRatio={2} overflow="hidden" position="relatve">
+		<Card.Root overflow="hidden" {...rest}>
 			<Box width="full" height="full" position="absolute">
 				{event.banner_url && (
 					<Image
@@ -44,8 +47,8 @@ export function EventCard({ event }: { event: Event | undefined }) {
 						mt="2"
 					>
 						{dayjs(event.start_date).format("dddd [the] Do MMMM")},{" "}
-						{dayjs(event.start_time, "HH:mm:ssZZ").format("HH:mm")} to{" "}
-						{dayjs(event.end_time, "HH:mm:ssZZ").format("HH:mm")}
+						{dayjs(event.start_time).format("HH:mm")} to{" "}
+						{dayjs(event.end_time).format("HH:mm")}
 					</Text>
 				</Card.Title>
 				<Card.Description textStyle="md">{event.blurb}</Card.Description>

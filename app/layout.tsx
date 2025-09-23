@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Container, Flex } from "@chakra-ui/react";
 import { Inter } from "next/font/google";
+import type { PropsWithChildren, ReactNode } from "react";
 import { Header } from "./header";
 import Provider from "./provider";
 
@@ -9,11 +10,16 @@ const inter = Inter({
 	display: "swap",
 });
 
+type RootLayoutProps = Readonly<
+	PropsWithChildren<{
+		modals: ReactNode;
+	}>
+>;
+
 export default async function RootLayout({
 	children,
-}: {
-	children: React.ReactNode;
-}) {
+	modals,
+}: RootLayoutProps) {
 	const supabase = await createClient();
 
 	const claimCollection = await supabase.auth.getClaims();
@@ -34,6 +40,7 @@ export default async function RootLayout({
 							flexDir="column"
 						>
 							{children}
+							{modals}
 						</Container>
 					</Flex>
 				</Provider>
