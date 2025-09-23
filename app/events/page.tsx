@@ -1,12 +1,14 @@
+import { EventLogic } from "@/domain/event-logic";
 import { PrismaClient } from "@/generated/prisma";
 import { getAbilities } from "@/lib/auth/get-abilities";
 import { createClient } from "@/lib/supabase/server";
-import { Grid, GridItem, List, ListItem } from "@chakra-ui/react";
+import { getEventsWithUserTeams } from "@/prisma/queries/get-events-with-user-teams";
+import { Grid, GridItem, Heading, Stack } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { notFound } from "next/navigation";
 import { EventCard } from "./components/event-card";
-import { getNext, getPastTen } from "./utils";
+import { PastEventCard } from "./components/past-event-card";
 
 dayjs.extend(isSameOrAfter);
 
@@ -26,38 +28,39 @@ export default async function UsersPage() {
 		throw new Error(userResponse.error.message);
 	}
 
-	const user_id = userResponse.data.user.id;
+	const userId = userResponse.data.user.id;
 
 	const prismaClient = new PrismaClient();
 
-	const data = await prismaClient.events.findMany({
-		include: {
-			teams: {
-				where: {
-					user_teams: {
-						some: {
-							user_id,
-						},
-					},
-				},
-			},
-		},
-	});
+	const data = await getEventsWithUserTeams(prismaClient)(userId);
 
-	const nextEvent = getNext(data);
-	const pastEvents = getPastTen(data);
+	const nextEvent = EventLogic.getNextEvent(data);
+	const pastEvents = EventLogic.getPastEvents(data);
 
 	return (
-		<Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4}>
-			<GridItem colSpan={{ base: 1, md: 2 }}>
-				<EventCard event={nextEvent} />
+		<Grid
+			templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+			gap={4}
+			flexGrow={1}
+		>
+			<GridItem
+				colSpan={{ base: 1, md: 2 }}
+				display="flex"
+				justifyContent="stretch"
+				flexDir="column"
+			>
+				<Stack flexGrow={1}>
+					<Heading>Next Event</Heading>
+					<EventCard event={nextEvent} flexGrow={1} />
+				</Stack>
 			</GridItem>
 			<GridItem>
-				<List.Root>
+				<Stack>
+					<Heading>Past Events</Heading>
 					{pastEvents.map((event) => (
-						<ListItem key={event.id}>{event.title}</ListItem>
+						<PastEventCard key={event.id} event={event} />
 					))}
-				</List.Root>
+				</Stack>
 			</GridItem>
 		</Grid>
 	);
