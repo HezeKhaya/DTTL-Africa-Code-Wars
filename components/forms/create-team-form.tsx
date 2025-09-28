@@ -41,7 +41,7 @@ export function CreateTeamForm({
 
 	useEffect(() => {
 		if (formState.success) {
-			router.push(`/events/${eventId}/teams/${formState.teamId}?`);
+			router.push(`/events/${eventId}/teams/${formState.teamId}`);
 		}
 	}, [formState, eventId, router.push]);
 

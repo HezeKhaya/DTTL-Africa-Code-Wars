@@ -20,6 +20,7 @@ export default async function CreateTeamModalPage({
 
 	const userId = userResponse.data.user.id;
 	const eventId = (await searchParams).eventId as string;
+
 	const prismaClient = new PrismaClient();
 	const [availableTeamMembers, existingTeam] = await Promise.all([
 		getUsersNotAssignedToEvent(prismaClient)(eventId),
