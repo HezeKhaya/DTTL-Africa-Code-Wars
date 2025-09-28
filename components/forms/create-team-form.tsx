@@ -1,18 +1,19 @@
 "use client";
 
-import type { CreateTeamPayload } from "@/prisma/mutations/create-team";
+import { createTeamAction } from "@/actions/team-actions";
 import type { User } from "@/prisma/queries/get-users";
 import {
-	Badge,
 	Combobox,
 	Field,
 	Input,
 	Stack,
+	Tag,
 	useFilter,
 	useListCollection,
 	Wrap,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { useActionState, useState } from "react";
+import { LuCrown } from "react-icons/lu";
 import { filter, find, map, pipe, prop, sortBy } from "remeda";
 
 interface CreateTeamFormProps {
@@ -20,7 +21,6 @@ interface CreateTeamFormProps {
 	userId: string;
 	formId: string;
 	availableTeamMembers: User[];
-	onSubmit: (payload: CreateTeamPayload) => void;
 }
 
 export function CreateTeamForm({
@@ -28,20 +28,15 @@ export function CreateTeamForm({
 	userId,
 	formId,
 	availableTeamMembers,
-	onSubmit,
 }: CreateTeamFormProps) {
-	const {
-		register,
-		handleSubmit: handleHookFormSubmit,
-		formState: { errors },
-		control,
-	} = useForm<CreateTeamPayload>({
-		values: {
-			event_id: eventId,
-			captain_id: userId,
-			name: "",
-		},
+	const [formState, formAction] = useActionState(createTeamAction, {
+		success: false,
 	});
+	const [selectedTeamMemberIds, setSelectedTeamMemberIds] = useState<string[]>(
+		[],
+	);
+
+	const errors = formState.errors ?? {};
 
 	const { contains } = useFilter({ sensitivity: "base" });
 
@@ -51,70 +46,81 @@ export function CreateTeamForm({
 	});
 
 	return (
-		<form id={formId} onSubmit={handleSubmit}>
+		<form id={formId} action={formAction}>
 			<Stack gap="4" align="stretch" maxW="sm">
+				<Input name="event_id" defaultValue={eventId} display="none" />
+				<Input name="captain_id" defaultValue={userId} display="none" />
 				<Field.Root invalid={!!errors.name}>
-					<Field.Label>Team name</Field.Label>
-					<Input
-						{...register("name", {
-							required: "Required",
-							minLength: { value: 5, message: "At least 5 characters" },
-						})}
-					/>
-					<Field.ErrorText>{errors.name?.message}</Field.ErrorText>
+					<Field.Label>Team Name</Field.Label>
+					<Input name="name" placeholder="Enter a team name" />
+					<Field.ErrorText>{errors.name}</Field.ErrorText>
 				</Field.Root>
 
 				<Field.Root invalid={!!errors.member_ids}>
 					<Field.Label>Team Members</Field.Label>
-					<Controller
-						control={control}
-						name="member_ids"
-						render={({ field }) => (
-							<Combobox.Root
-								multiple
-								collection={collection}
-								value={field.value ?? []}
-								onValueChange={({ value }) => field.onChange(value)}
-								onInputValueChange={handleInputChange}
-								onInteractOutside={() => field.onBlur()}
-								positioning={{ strategy: "fixed", hideWhenDetached: true }}
-							>
-								<Wrap gap="2">
-									<Badge>{getUserName(userId)}</Badge>
-									{(field.value ?? []).map((userId) => (
-										<Badge key={userId}>{getUserName(userId)}</Badge>
-									))}
-								</Wrap>
-								<Combobox.Control>
-									<Combobox.Input placeholder="Select framework" />
-									<Combobox.IndicatorGroup>
-										<Combobox.ClearTrigger />
-										<Combobox.Trigger />
-									</Combobox.IndicatorGroup>
-								</Combobox.Control>
+					<Combobox.Root
+						multiple
+						collection={collection}
+						onInputValueChange={handleInputChange}
+						positioning={{ strategy: "fixed", hideWhenDetached: true }}
+						value={selectedTeamMemberIds}
+						onValueChange={handleValueChange}
+					>
+						<Wrap gap="2">
+							<Tag.Root>
+								<Tag.Label>{getUserName(userId)}</Tag.Label>
+								<Tag.EndElement>
+									<LuCrown />
+								</Tag.EndElement>
+							</Tag.Root>
+							{selectedTeamMemberIds.map((userId) => (
+								<Tag.Root key={userId}>
+									<Tag.Label>{getUserName(userId)}</Tag.Label>
+									<Tag.EndElement>
+										<Tag.CloseTrigger
+											onClick={() => handleRemoveTeamMember(userId)}
+										/>
+									</Tag.EndElement>
+								</Tag.Root>
+							))}
+						</Wrap>
+						<Combobox.Control>
+							<Combobox.Input placeholder="Add team members" />
+							<Combobox.IndicatorGroup>
+								<Combobox.Trigger />
+							</Combobox.IndicatorGroup>
+						</Combobox.Control>
 
-								<Combobox.Positioner>
-									<Combobox.Content>
-										<Combobox.Empty>No frameworks found</Combobox.Empty>
-										{collection.items.map((item) => (
-											<Combobox.Item key={item.value} item={item}>
-												{item.label}
-												<Combobox.ItemIndicator />
-											</Combobox.Item>
-										))}
-									</Combobox.Content>
-								</Combobox.Positioner>
-							</Combobox.Root>
-						)}
-					/>
-					<Field.ErrorText>{errors.member_ids?.message}</Field.ErrorText>
+						<Combobox.Positioner>
+							<Combobox.Content>
+								<Combobox.Empty>No eligible users found</Combobox.Empty>
+								{collection.items.map((item) => (
+									<Combobox.Item key={item.value} item={item}>
+										{item.label}
+										<Combobox.ItemIndicator />
+									</Combobox.Item>
+								))}
+							</Combobox.Content>
+						</Combobox.Positioner>
+					</Combobox.Root>
+					<Field.ErrorText>{errors.member_ids}</Field.ErrorText>
 				</Field.Root>
 			</Stack>
 		</form>
 	);
 
+	function handleValueChange(details: Combobox.ValueChangeDetails) {
+		setSelectedTeamMemberIds(details.value);
+	}
+
 	function handleInputChange(details: Combobox.InputValueChangeDetails) {
 		filterCollection(details.inputValue);
+	}
+
+	function handleRemoveTeamMember(idToRemove: string) {
+		setSelectedTeamMemberIds((previous) =>
+			previous.filter((id) => id !== idToRemove),
+		);
 	}
 
 	function toCollection(users: User[]) {
@@ -129,9 +135,5 @@ export function CreateTeamForm({
 
 	function getUserName(userId: string) {
 		return find(availableTeamMembers, (user) => user.id === userId)?.full_name;
-	}
-
-	function handleSubmit() {
-		handleHookFormSubmit(onSubmit);
 	}
 }
