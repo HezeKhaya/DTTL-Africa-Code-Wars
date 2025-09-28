@@ -2,7 +2,7 @@ import type { PrismaClient } from "@/generated/prisma";
 
 export const getEventsWithUserTeams =
 	(prismaClient: PrismaClient) => (user_id: string) =>
-		prismaClient.events.findMany({
+		prismaClient.event.findMany({
 			include: {
 				teams: {
 					where: {

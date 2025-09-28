@@ -15,7 +15,7 @@
 		"source.organizeImports.biome": "explicit",
 		"source.fixAll.biome": "explicit"
 	},
-	"typescript.tsdk": "../../node_modules/.pnpm/typescript@4.7.4/node_modules/typescript/lib",
+	"typescript.tsdk": "./node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"cSpell.words": ["barrelsby", "supabase"]
 }

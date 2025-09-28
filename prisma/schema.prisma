@@ -10,99 +10,113 @@ datasource db {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model challenges {
-  id          BigInt        @id(map: "challenge_pkey") @default(autoincrement())
-  name        String        @db.VarChar
-  slug        String        @db.VarChar
-  order       Int           @default(0) @db.SmallInt
-  created_at  DateTime      @default(now()) @db.Timestamptz(6)
-  level       Int           @default(1) @db.SmallInt
-  value       Int           @default(1) @db.SmallInt
-  event_id    String        @db.Uuid
-  events      events        @relation(fields: [event_id], references: [id], onDelete: Cascade)
-  submissions submissions[]
+model Challenge {
+  id          BigInt       @id(map: "challenge_pkey") @default(autoincrement())
+  name        String       @db.VarChar
+  slug        String       @db.VarChar
+  order       Int          @default(0) @db.SmallInt
+  created_at  DateTime     @default(now()) @db.Timestamptz(6)
+  level       Int          @default(1) @db.SmallInt
+  value       Int          @default(1) @db.SmallInt
+  event_id    String       @db.Uuid
+  event       Event        @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  submissions Submission[]
+
+  @@map("categories")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model events {
-  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at DateTime     @default(now()) @db.Timestamptz(6)
-  update_at  DateTime     @default(now()) @db.Timestamptz(6)
-  created_by String       @db.Uuid
-  title      String       @db.VarChar
-  banner_url String?      @db.VarChar
-  start_date DateTime     @db.Date
-  start_time DateTime     @db.Timetz(6)
-  end_time   DateTime     @db.Timetz(6)
-  blurb      String?      @db.VarChar
-  challenges challenges[]
-  users      users        @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  teams      teams[]
+model Event {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at DateTime    @default(now()) @db.Timestamptz(6)
+  update_at  DateTime    @default(now()) @db.Timestamptz(6)
+  created_by String      @db.Uuid
+  title      String      @db.VarChar
+  banner_url String?     @db.VarChar
+  start_date DateTime    @db.Date
+  start_time DateTime    @db.Timetz(6)
+  end_time   DateTime    @db.Timetz(6)
+  blurb      String?     @db.VarChar
+  challenges Challenge[]
+  user       User        @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teams      Team[]
+
+  @@map("events")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model submissions {
-  id                                    BigInt     @id @default(autoincrement())
-  created_at                            DateTime   @default(now()) @db.Timestamptz(6)
-  challenge_id                          BigInt
-  team_id                               String     @db.Uuid
-  verified                              Boolean    @default(false)
-  submitted_by                          String?    @db.Uuid
-  verified_by                           String?    @db.Uuid
-  challenges                            challenges @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
-  users_submissions_submitted_byTousers users?     @relation("submissions_submitted_byTousers", fields: [submitted_by], references: [id])
-  teams                                 teams      @relation(fields: [team_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users_submissions_verified_byTousers  users?     @relation("submissions_verified_byTousers", fields: [verified_by], references: [id])
+model Submission {
+  id                BigInt    @id @default(autoincrement())
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  challenge_id      BigInt
+  team_id           String    @db.Uuid
+  verified          Boolean   @default(false)
+  submitted_by      String?   @db.Uuid
+  verified_by       String?   @db.Uuid
+  challenge         Challenge @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
+  submitted_by_user User?     @relation("submissions_submitted_byTousers", fields: [submitted_by], references: [id])
+  team              Team      @relation(fields: [team_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  verified_by_user  User?     @relation("submissions_verified_byTousers", fields: [verified_by], references: [id])
+
+  @@map("submissions")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model teams {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String        @unique
-  created_at  DateTime      @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime      @default(now()) @db.Timestamp(6)
-  created_by  String        @db.Uuid
-  event_id    String?       @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  submissions submissions[]
-  users       users         @relation(fields: [created_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
-  events      events?       @relation(fields: [event_id], references: [id], onDelete: Cascade)
-  user_teams  user_teams[]
+model Team {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String       @unique
+  created_at  DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime     @default(now()) @db.Timestamp(6)
+  created_by  String       @db.Uuid
+  event_id    String?      @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  submissions Submission[]
+  user        User         @relation(fields: [created_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  event       Event?       @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  user_teams  UserTeam[]
+
+  @@map("teams")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model user_teams {
+model UserTeam {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id    String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   team_id    String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamp(6)
-  role       role     @default(member)
-  teams      teams    @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  role       Role     @default(member)
+  team       Team     @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("user_teams")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model users {
-  id                                          String        @id @db.Uuid
-  full_name                                   String?
-  email                                       String?       @unique
-  avatar_url                                  String?
-  created_at_at                               DateTime      @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  updated_at                                  DateTime      @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  is_admin                                    Boolean       @default(false)
-  events                                      events[]
-  submissions_submissions_submitted_byTousers submissions[] @relation("submissions_submitted_byTousers")
-  submissions_submissions_verified_byTousers  submissions[] @relation("submissions_verified_byTousers")
-  teams                                       teams[]
-  user_teams                                  user_teams[]
+model User {
+  id                    String       @id @db.Uuid
+  full_name             String?
+  email                 String?      @unique
+  avatar_url            String?
+  created_at_at         DateTime     @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  updated_at            DateTime     @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  is_admin              Boolean      @default(false)
+  events                Event[]
+  submitted_submissions Submission[] @relation("submissions_submitted_byTousers")
+  verified_submissions  Submission[] @relation("submissions_verified_byTousers")
+  teams                 Team[]
+  user_teams            UserTeam[]
+
+  @@map("users")
 }
 
 /// This enum is commented in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-enum role {
+enum Role {
   captain
   member
+
+  @@map("role")
 }

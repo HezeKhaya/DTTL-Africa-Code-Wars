@@ -18,10 +18,14 @@
 		},
 		"typescript.preferences.preferTypeOnlyAutoImports": true,
 		"editor.codeActionsOnSave": {
+			"source.removeUnusedImports": "always",
 			"source.organizeImports.biome": "explicit",
 			"source.fixAll.biome": "explicit"
 		},
-		"cSpell.words": ["Kysely"]
+		"cSpell.words": ["Kysely"],
+		"typescript.tsdk": "./node_modules/typescript/lib",
+		"typescript.enablePromptUseWorkspaceTsdk": true,
+		"typescript.tsserver.log": "verbose"
 	},
 	"extensions": {
 		"recommendations": [
