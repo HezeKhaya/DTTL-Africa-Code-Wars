@@ -1,10 +1,10 @@
 import { BackButton } from "@/components/buttons/back-button";
 import { CreateTeamForm } from "@/components/forms/create-team-form";
+import { PrismaClient } from "@/generated/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { getQueryClient } from "@/lib/tanstack/get-query-client";
-import { userQueryOptions } from "@/prisma/queries/get-users";
+import type { CreateTeamPayload } from "@/prisma/mutations/create-team";
+import { getUsersNotAssignedToEvent } from "@/prisma/queries/get-users-not-assigned-to-event";
 import { Button, Dialog, Portal } from "@chakra-ui/react";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 export default async function CreateTeamModalPage({
 	searchParams,
@@ -21,37 +21,43 @@ export default async function CreateTeamModalPage({
 
 	const userId = userResponse.data.user.id;
 	const eventId = (await searchParams).eventId as string;
-	const queryClient = getQueryClient();
-
-	void queryClient.prefetchQuery(userQueryOptions);
+	const prismaClient = new PrismaClient();
+	const availableTeamMembers =
+		await getUsersNotAssignedToEvent(prismaClient)(eventId);
 
 	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Dialog.Root size="sm" open>
-				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<Dialog.Content>
-							<Dialog.Header>Register Team</Dialog.Header>
-							<Dialog.Body>
-								<CreateTeamForm
-									formId={formId}
-									eventId={eventId}
-									userId={userId}
-								/>
-							</Dialog.Body>
-							<Dialog.Footer>
-								<BackButton>
-									<Button variant="outline">Cancel</Button>
-								</BackButton>
-								<Button type="submit" form={formId}>
-									Register
-								</Button>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</Dialog.Positioner>
-				</Portal>
-			</Dialog.Root>
-		</HydrationBoundary>
+		<Dialog.Root size="sm" open>
+			<Portal>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>Register Team</Dialog.Header>
+						<Dialog.Body>
+							<CreateTeamForm
+								formId={formId}
+								eventId={eventId}
+								userId={userId}
+								availableTeamMembers={availableTeamMembers}
+								onSubmit={createTeam}
+							/>
+						</Dialog.Body>
+						<Dialog.Footer>
+							<BackButton>
+								<Button variant="outline">Cancel</Button>
+							</BackButton>
+							<Button type="submit" form={formId}>
+								Register
+							</Button>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Portal>
+		</Dialog.Root>
 	);
+
+	async function createTeam(payload: CreateTeamPayload) {
+		"use server";
+
+		console.log(payload);
+	}
 }

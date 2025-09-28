@@ -12,34 +12,27 @@ import {
 	useListCollection,
 	Wrap,
 } from "@chakra-ui/react";
-import ky from "ky";
 import { Controller, useForm } from "react-hook-form";
+import { filter, find, map, pipe, prop, sortBy } from "remeda";
 
 interface CreateTeamFormProps {
 	eventId: string;
 	userId: string;
 	formId: string;
+	availableTeamMembers: User[];
+	onSubmit: (payload: CreateTeamPayload) => void;
 }
-
-const frameworks = [
-	{ label: "React", value: "react" },
-	{ label: "Vue", value: "vue" },
-	{ label: "Angular", value: "angular" },
-	{ label: "Svelte", value: "svelte" },
-	{ label: "Solid", value: "solid" },
-	{ label: "Qwik", value: "qwik" },
-	{ label: "Lit", value: "lit" },
-	{ label: "Alpine", value: "alpine" },
-];
 
 export function CreateTeamForm({
 	eventId,
 	userId,
 	formId,
+	availableTeamMembers,
+	onSubmit,
 }: CreateTeamFormProps) {
 	const {
 		register,
-		handleSubmit,
+		handleSubmit: handleHookFormSubmit,
 		formState: { errors },
 		control,
 	} = useForm<CreateTeamPayload>({
@@ -50,17 +43,15 @@ export function CreateTeamForm({
 		},
 	});
 
-	const onSubmit = handleSubmit((data) => console.log(data));
-
 	const { contains } = useFilter({ sensitivity: "base" });
 
-	const { collection, filter } = useListCollection({
-		initialItems: frameworks,
+	const { collection, filter: filterCollection } = useListCollection({
+		initialItems: toCollection(availableTeamMembers),
 		filter: contains,
 	});
 
 	return (
-		<form id={formId} onSubmit={onSubmit}>
+		<form id={formId} onSubmit={handleSubmit}>
 			<Stack gap="4" align="stretch" maxW="sm">
 				<Field.Root invalid={!!errors.name}>
 					<Field.Label>Team name</Field.Label>
@@ -89,8 +80,9 @@ export function CreateTeamForm({
 								positioning={{ strategy: "fixed", hideWhenDetached: true }}
 							>
 								<Wrap gap="2">
-									{(field.value ?? []).map((skill) => (
-										<Badge key={skill}>{skill}</Badge>
+									<Badge>{getUserName(userId)}</Badge>
+									{(field.value ?? []).map((userId) => (
+										<Badge key={userId}>{getUserName(userId)}</Badge>
 									))}
 								</Wrap>
 								<Combobox.Control>
@@ -122,6 +114,24 @@ export function CreateTeamForm({
 	);
 
 	function handleInputChange(details: Combobox.InputValueChangeDetails) {
-		filter(details.inputValue);
+		filterCollection(details.inputValue);
+	}
+
+	function toCollection(users: User[]) {
+		return pipe(
+			users,
+			filter((user) => user.full_name !== null && user.id !== userId),
+			map((user) => ({ ...user, full_name: user.full_name ?? "" })),
+			sortBy(prop("full_name")),
+			map((user) => ({ label: user.full_name, value: user.id })),
+		);
+	}
+
+	function getUserName(userId: string) {
+		return find(availableTeamMembers, (user) => user.id === userId)?.full_name;
+	}
+
+	function handleSubmit() {
+		handleHookFormSubmit(onSubmit);
 	}
 }
