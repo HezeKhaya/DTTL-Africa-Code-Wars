@@ -3,6 +3,8 @@
 import { createTeamAction } from "@/actions/team-actions";
 import type { User } from "@/prisma/queries/get-users";
 import {
+	Button,
+	ButtonGroup,
 	Combobox,
 	Field,
 	Input,
@@ -12,31 +14,38 @@ import {
 	useListCollection,
 	Wrap,
 } from "@chakra-ui/react";
-import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
 import { LuCrown } from "react-icons/lu";
 import { filter, find, map, pipe, prop, sortBy } from "remeda";
 
 interface CreateTeamFormProps {
 	eventId: string;
 	userId: string;
-	formId: string;
 	availableTeamMembers: User[];
 }
 
 export function CreateTeamForm({
 	eventId,
 	userId,
-	formId,
 	availableTeamMembers,
 }: CreateTeamFormProps) {
-	const [formState, formAction] = useActionState(createTeamAction, {
+	const [formState, formAction, isPending] = useActionState(createTeamAction, {
 		success: false,
+		error: "",
 	});
 	const [selectedTeamMemberIds, setSelectedTeamMemberIds] = useState<string[]>(
 		[],
 	);
+	const router = useRouter();
 
-	const errors = formState.errors ?? {};
+	useEffect(() => {
+		if (formState.success) {
+			router.push(`/events/${eventId}/teams/${formState.teamId}?`);
+		}
+	}, [formState, eventId, router.push]);
+
+	const errors = formState.success ? {} : (formState.errors ?? {});
 
 	const { contains } = useFilter({ sensitivity: "base" });
 
@@ -46,7 +55,7 @@ export function CreateTeamForm({
 	});
 
 	return (
-		<form id={formId} action={formAction}>
+		<form action={formAction}>
 			<Stack gap="4" align="stretch" maxW="sm">
 				<Input name="event_id" defaultValue={eventId} display="none" />
 				<Input name="captain_id" defaultValue={userId} display="none" />
@@ -55,7 +64,6 @@ export function CreateTeamForm({
 					<Input name="name" placeholder="Enter a team name" />
 					<Field.ErrorText>{errors.name}</Field.ErrorText>
 				</Field.Root>
-
 				<Field.Root invalid={!!errors.member_ids}>
 					<Field.Label>Team Members</Field.Label>
 					<Combobox.Root
@@ -105,6 +113,17 @@ export function CreateTeamForm({
 					</Combobox.Root>
 					<Field.ErrorText>{errors.member_ids}</Field.ErrorText>
 				</Field.Root>
+
+				{/* TODO: Add error text for general error */}
+
+				<ButtonGroup flexDirection="row-reverse">
+					<Button loading={isPending} type="submit">
+						Register
+					</Button>
+					<Button disabled={isPending} onClick={router.back} variant="outline">
+						Cancel
+					</Button>
+				</ButtonGroup>
 			</Stack>
 		</form>
 	);

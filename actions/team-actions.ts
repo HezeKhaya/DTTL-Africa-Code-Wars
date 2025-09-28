@@ -1,18 +1,23 @@
 "use server";
 
+import { PrismaClient } from "@/generated/prisma";
+import { createTeam } from "@/prisma/mutations/create-team";
 import { createTeamPayloadSchema } from "@/schemas/create-team-payload-schema";
 import { mapValues } from "remeda";
 import "server-only";
 import z from "zod";
 
-type FormState = {
-	success: boolean;
-	fields?: Record<string, string>;
-	errors?: Record<string, string>;
-};
+type FormState =
+	| {
+			success: false;
+			error: string;
+			fields?: Record<string, string>;
+			errors?: Record<string, string>;
+	  }
+	| { success: true; teamId: string };
 
 export async function createTeamAction(
-	prevState: FormState,
+	_prevState: FormState,
 	payload: FormData,
 ): Promise<FormState> {
 	console.log("payload received", payload);
@@ -20,7 +25,7 @@ export async function createTeamAction(
 	if (!(payload instanceof FormData)) {
 		return {
 			success: false,
-			errors: { form: "Invalid form data" },
+			error: "Invalid form data",
 		};
 	}
 
@@ -39,13 +44,21 @@ export async function createTeamAction(
 		return {
 			success: false,
 			fields,
+			error: "",
 			errors: mapValues(properties, (val) => val.errors[0]),
 		};
 	}
 
-	console.log(parsed);
+	const prismaClient = new PrismaClient();
 
-	return {
-		success: true,
-	};
+	try {
+		const result = await createTeam(prismaClient)(parsed.data);
+
+		return { success: true, teamId: result.id };
+	} catch {
+		return {
+			success: false,
+			error: "Internal server error",
+		};
+	}
 }
