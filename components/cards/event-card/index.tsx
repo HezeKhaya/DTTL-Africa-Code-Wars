@@ -1,12 +1,9 @@
 import type { Event } from "@/generated/prisma";
 import type { TeamSubject } from "@/prisma/types";
 import { Box, Card, Center, Heading, Text } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
+import { format } from "date-fns";
 import Image from "next/image";
 import { EventButtons } from "./components/event-buttons";
-
-dayjs.extend(advancedFormat);
 
 type EventCardProps = {
 	event: Event | undefined;
@@ -48,9 +45,9 @@ export function EventCard({ event, userTeam, ...rest }: EventCardProps) {
 						letterSpacing="tight"
 						mt="2"
 					>
-						{dayjs(event.start_date).format("dddd [the] Do MMMM")},{" "}
-						{dayjs(event.start_time).format("HH:mm")} to{" "}
-						{dayjs(event.end_time).format("HH:mm")}
+						{format(event.start_date, "eeee 'the' do MMMM")},{" "}
+						{format(event.start_time, "HH:mm")} to{" "}
+						{format(event.end_time, "HH:mm")}
 					</Text>
 				</Card.Title>
 				<Card.Description textStyle="md" pb={20} color="fg">

@@ -1,15 +1,15 @@
 import type { Event } from "@/prisma/types";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { filter, firstBy, pipe, prop, sortBy, take } from "remeda";
+import { getHours, getMinutes, setHours, setMinutes } from "date-fns/fp";
+import { filter, firstBy, pipe, piped, prop, sortBy, take } from "remeda";
 
-dayjs.extend(isSameOrAfter);
+const setTime = (source: Date) =>
+	piped(setHours(getHours(source)), setMinutes(getMinutes(source)));
 
 export const EventLogic = {
 	isPast: <T extends Event>(event: T) => !EventLogic.isUpcoming(event),
 	isUpcoming: <T extends Event>(event: T) => {
 		const start = EventLogic.getStartDateTime(event);
-		const now = dayjs(Date.now());
+		const now = new Date();
 		return start > now;
 	},
 	getNextEvent: <T extends Event>(events: T[]) =>
@@ -25,10 +25,7 @@ export const EventLogic = {
 			sortBy([prop("start_date"), "desc"]),
 			take(10),
 		),
-	getStartDateTime: <T extends Event>({ start_date, end_time }: T) => {
-		return dayjs(start_date)
-			.startOf("day")
-			.set("hours", end_time.getHours())
-			.set("minutes", end_time.getMinutes());
+	getStartDateTime: <T extends Event>({ start_date, start_time }: T) => {
+		return setTime(start_time)(start_date);
 	},
 };

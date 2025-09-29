@@ -1,10 +1,7 @@
 import type { EventWithUserTeam } from "@/prisma/queries/get-events-with-user-teams";
 import { Box, Stack, Text } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
+import { format } from "date-fns";
 import Image from "next/image";
-
-dayjs.extend(advancedFormat);
 
 export function PastEventCard({ event }: { event: EventWithUserTeam }) {
 	return (
@@ -27,9 +24,9 @@ export function PastEventCard({ event }: { event: EventWithUserTeam }) {
 			>
 				<Text textStyle="lg">{event.title}</Text>
 				<Text textStyle="md" fontWeight="medium" letterSpacing="tight" mt="2">
-					{dayjs(event.start_date).format("dddd [the] Do MMMM")},{" "}
-					{dayjs(event.start_time).format("HH:mm")} to{" "}
-					{dayjs(event.end_time).format("HH:mm")}
+					{format(event.start_date, "eeee 'the' do MMMM")},{" "}
+					{format(event.start_time, "HH:mm")} to{" "}
+					{format(event.end_time, "HH:mm")}
 				</Text>
 			</Stack>
 		</Box>

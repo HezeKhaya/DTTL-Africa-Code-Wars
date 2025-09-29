@@ -1,5 +1,5 @@
 import type { Event } from "@/prisma/types";
-import dayjs from "dayjs";
+import { addDays } from "date-fns";
 import { range } from "remeda";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { EventLogic } from "./event-logic";
@@ -8,19 +8,19 @@ describe("EventLogic", () => {
 	const now = new Date(2025, 1, 1, 13, 0);
 
 	const stubUpcomingEvent = {
-		start_date: dayjs(now).add(1, "day").toDate(),
+		start_date: addDays(now, 1),
 		end_time: new Date(0, 0, 0, 13, 30),
 	} as unknown as Event;
 
 	const stubFutureEvent = {
-		start_date: dayjs(now).add(1, "day").toDate(),
+		start_date: addDays(now, 1),
 		end_time: new Date(0, 0, 0, 14, 30),
 	} as unknown as Event;
 
 	const makePastEvent = (age: number) =>
 		({
 			id: age.toString(),
-			start_date: dayjs(now).add(-Math.abs(age), "days").toDate(),
+			start_date: addDays(now, age),
 			end_time: new Date(0, 0, 0, 9, 30),
 		}) as unknown as Event;
 

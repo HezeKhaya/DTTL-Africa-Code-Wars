@@ -6,12 +6,8 @@ import { getAbilities } from "@/lib/auth/get-abilities";
 import { createClient } from "@/lib/supabase/server";
 import { getEventsWithUserTeams } from "@/prisma/queries/get-events-with-user-teams";
 import { Grid, GridItem, Heading, Stack } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { notFound } from "next/navigation";
 import { PastEventCard } from "./components/past-event-card";
-
-dayjs.extend(isSameOrAfter);
 
 export default async function UsersPage() {
 	const supabase = await createClient();

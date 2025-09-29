@@ -31,9 +31,7 @@ export default async function EventPage({
 					<EventCard event={event} userTeam={userTeam} flexGrow={1} />
 				</GridItem>
 				<GridItem colSpan={2}>
-					<Locked
-						startDateTime={EventLogic.getStartDateTime(event).toDate()}
-					></Locked>
+					<Locked startDateTime={EventLogic.getStartDateTime(event)}></Locked>
 				</GridItem>
 			</Grid>
 		</Stack>

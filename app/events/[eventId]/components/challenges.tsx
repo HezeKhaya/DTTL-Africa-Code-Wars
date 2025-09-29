@@ -1,11 +1,18 @@
 "use client";
 
 import { Card, CardBody, Heading, Text } from "@chakra-ui/react";
-import dayjs from "dayjs";
+import { intervalToDuration } from "date-fns";
 import { useEffect, useState } from "react";
 
 function calculateRemaining(reference: Date) {
-	return Math.abs(dayjs(reference).diff(dayjs()));
+	const duration = intervalToDuration({ start: new Date(), end: reference });
+
+	const days = duration.days ?? 0;
+	const hours = String(duration.hours ?? 0).padStart(2, "0");
+	const minutes = String(duration.minutes ?? 0).padStart(2, "0");
+	const seconds = String(duration.seconds ?? 0).padStart(2, "0");
+
+	return `${days}d ${hours}:${minutes}:${seconds}`;
 }
 
 export function Locked({ startDateTime }: { startDateTime: Date }) {
@@ -30,7 +37,7 @@ export function Locked({ startDateTime }: { startDateTime: Date }) {
 				>
 					<Text>Challenges unlocking in:</Text>
 					<Heading as="p" suppressHydrationWarning textStyle="6xl">
-						{dayjs(remaining).format("D[d] HH:mm:ss")}
+						{remaining}
 					</Heading>
 				</Card.Title>
 			</CardBody>
