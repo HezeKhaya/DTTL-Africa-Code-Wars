@@ -1,5 +1,11 @@
 import { Heading } from "@chakra-ui/react";
 
-export default function EventTeamPage() {
-	return <Heading>Huzzah!</Heading>;
+export default async function EventTeamPage({
+	params,
+}: {
+	params: Promise<{ eventId: string; teamId: string }>;
+}) {
+	const { teamId } = await params;
+
+	return <Heading>Huzzah! {teamId}</Heading>;
 }

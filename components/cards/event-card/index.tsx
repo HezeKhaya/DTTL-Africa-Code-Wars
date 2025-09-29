@@ -1,21 +1,22 @@
-import type { EventWithUserTeam } from "@/prisma/queries/get-events-with-user-teams";
+import type { Event } from "@/generated/prisma";
+import type { TeamSubject } from "@/prisma/types";
 import { Box, Card, Center, Heading, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import Image from "next/image";
-import { EventButtons } from "./event-buttons";
+import { EventButtons } from "./components/event-buttons";
 
 dayjs.extend(advancedFormat);
 
-type EventCardProps = { event: EventWithUserTeam | undefined } & Pick<
-	Card.RootProps,
-	"flexGrow"
->;
+type EventCardProps = {
+	event: Event | undefined;
+	userTeam: TeamSubject | undefined;
+} & Pick<Card.RootProps, "flexGrow">;
 
-export function EventCard({ event, ...rest }: EventCardProps) {
+export function EventCard({ event, userTeam, ...rest }: EventCardProps) {
 	if (!event) {
 		return (
-			<Center>
+			<Center {...rest}>
 				<Heading>No upcoming events!</Heading>
 			</Center>
 		);
@@ -27,7 +28,7 @@ export function EventCard({ event, ...rest }: EventCardProps) {
 				{event.banner_url && (
 					<Image
 						src={event.banner_url}
-						alt="Green double couch with wooden legs"
+						alt="Event image"
 						fill
 						style={{ objectFit: "cover" }}
 					/>
@@ -54,7 +55,7 @@ export function EventCard({ event, ...rest }: EventCardProps) {
 				<Card.Description textStyle="md">{event.blurb}</Card.Description>
 			</Card.Body>
 			<Card.Footer>
-				<EventButtons event={event} />
+				<EventButtons eventId={event.id} userTeam={userTeam} />
 			</Card.Footer>
 		</Card.Root>
 	);

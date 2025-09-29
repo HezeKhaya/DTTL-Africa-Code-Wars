@@ -1,10 +1,12 @@
 {
   "directory": [
     "./components",
-    "./recipes"
+    "./recipes",
+    "./lib/auth"
   ],
   "barrelName": "index.ts",
   "delete": true,
   "singleQuotes": true,
-  "noHeader": true
+  "noHeader": true,
+  "exclude": "[\\s\\S]*\\.test\\.ts"
 }

@@ -1,5 +1,7 @@
+import { EventCard } from "@/components";
 import { EventLogic } from "@/domain/event-logic";
 import { PrismaClient } from "@/generated/prisma";
+import { getClaims, getUserId } from "@/lib/auth";
 import { getAbilities } from "@/lib/auth/get-abilities";
 import { createClient } from "@/lib/supabase/server";
 import { getEventsWithUserTeams } from "@/prisma/queries/get-events-with-user-teams";
@@ -7,28 +9,20 @@ import { Grid, GridItem, Heading, Stack } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { notFound } from "next/navigation";
-import { EventCard } from "./components/event-card";
 import { PastEventCard } from "./components/past-event-card";
 
 dayjs.extend(isSameOrAfter);
 
 export default async function UsersPage() {
 	const supabase = await createClient();
-	const claimCollection = await supabase.auth.getClaims();
 
-	const abilities = getAbilities(claimCollection?.data?.claims);
+	const abilities = getAbilities(await getClaims(supabase));
 
 	if (abilities.cannot("read", "Event")) {
 		return notFound();
 	}
 
-	const userResponse = await supabase.auth.getUser();
-
-	if (userResponse.error) {
-		throw new Error(userResponse.error.message);
-	}
-
-	const userId = userResponse.data.user.id;
+	const userId = await getUserId(supabase);
 
 	const prismaClient = new PrismaClient();
 
@@ -36,6 +30,7 @@ export default async function UsersPage() {
 
 	const nextEvent = EventLogic.getNextEvent(data);
 	const pastEvents = EventLogic.getPastEvents(data);
+	const userTeam = nextEvent?.teams[0];
 
 	return (
 		<Grid
@@ -51,7 +46,7 @@ export default async function UsersPage() {
 			>
 				<Stack flexGrow={1}>
 					<Heading>Next Event</Heading>
-					<EventCard event={nextEvent} flexGrow={1} />
+					<EventCard event={nextEvent} userTeam={userTeam} flexGrow={1} />
 				</Stack>
 			</GridItem>
 			<GridItem>

@@ -22,7 +22,7 @@ model Challenge {
   event       Event        @relation(fields: [event_id], references: [id], onDelete: Cascade)
   submissions Submission[]
 
-  @@map("categories")
+  @@map("challenges")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments

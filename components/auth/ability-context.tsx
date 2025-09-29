@@ -2,6 +2,7 @@
 
 import { type AppAbility, getAbilities } from "@/lib/auth/get-abilities";
 import { createMongoAbility } from "@casl/ability";
+import type { JwtPayload } from "@supabase/supabase-js";
 import {
 	createContext,
 	type PropsWithChildren,
@@ -17,7 +18,7 @@ export function AbilityProvider({
 	claims,
 	children,
 }: PropsWithChildren<{
-	claims: Record<string, unknown> | undefined;
+	claims: JwtPayload | undefined;
 }>) {
 	const ability = useMemo(() => getAbilities(claims), [claims]);
 	return (

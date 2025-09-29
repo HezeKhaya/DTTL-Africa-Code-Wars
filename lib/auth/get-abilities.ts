@@ -1,4 +1,4 @@
-import type { Event, Team } from "@/prisma/types";
+import type { Event, EventSubject, Team, TeamSubject } from "@/prisma/types";
 import {
 	AbilityBuilder,
 	createMongoAbility,
@@ -6,33 +6,34 @@ import {
 	type MongoQuery,
 	type PureAbility,
 } from "@casl/ability";
+import type { JwtPayload } from "@supabase/supabase-js";
 import { z } from "zod";
 
 const schema = z.object({
-	claims: z.object({
-		app_metadata: z.object({
-			admin: z.coerce.boolean(),
-			roles: z
-				.object({ captain: z.array(z.guid()), member: z.array(z.guid()) })
-				.partial(),
-		}),
+	app_metadata: z.object({
+		admin: z.coerce.boolean(),
+		roles: z
+			.object({ captain: z.array(z.guid()), member: z.array(z.guid()) })
+			.partial(),
 	}),
 });
 
-export type AppClaim = z.infer<typeof schema>["claims"]["app_metadata"];
+export type AppClaim = z.infer<typeof schema>["app_metadata"];
 
 const defaultClaim: AppClaim = {
 	admin: false,
 	roles: { captain: [], member: [] },
 };
 
-export type RawClaim =
-	| {
-			[key: string]: unknown;
-	  }
-	| z.infer<typeof schema>;
+export type RawClaim = z.infer<typeof schema> | JwtPayload;
 
-type SubjectUnion = Event | Team | "Event" | "Team";
+type SubjectUnion =
+	| Event
+	| EventSubject
+	| Team
+	| TeamSubject
+	| "Event"
+	| "Team";
 export type AppSubjects = InferSubjects<SubjectUnion, true> | "all";
 export type AppActions = "create" | "read" | "update" | "delete";
 export type AppAbility = PureAbility<
@@ -48,7 +49,7 @@ export function getAbilities(rawClaims: RawClaim | undefined): AppAbility {
 	const parseResult = schema.safeParse(rawClaims);
 
 	const claims = parseResult.success
-		? parseResult.data.claims.app_metadata
+		? parseResult.data.app_metadata
 		: defaultClaim;
 
 	const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
