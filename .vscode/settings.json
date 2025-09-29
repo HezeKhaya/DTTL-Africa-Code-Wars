@@ -17,5 +17,9 @@
 	},
 	"typescript.tsdk": "./node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
-	"cSpell.words": ["barrelsby", "supabase"]
+	"cSpell.words": [
+		"barrelsby",
+		"Chakra",
+		"supabase"
+	]
 }

@@ -37,9 +37,10 @@ export function EventCard({ event, userTeam, ...rest }: EventCardProps) {
 			<Card.Body
 				gap="2"
 				zIndex="docked"
-				bgImage="linear-gradient({colors.gray.900} 30%, transparent)"
+				bgImage="linear-gradient({colors.bg}, {colors.bg/50}, transparent)"
+				position="relative"
 			>
-				<Card.Title display="flex" flexDir="column" gap="1">
+				<Card.Title display="flex" flexDir="column" gap="1" zIndex={10}>
 					<Text textStyle="3xl">{event.title}</Text>
 					<Text
 						textStyle="2xl"
@@ -52,7 +53,9 @@ export function EventCard({ event, userTeam, ...rest }: EventCardProps) {
 						{dayjs(event.end_time).format("HH:mm")}
 					</Text>
 				</Card.Title>
-				<Card.Description textStyle="md">{event.blurb}</Card.Description>
+				<Card.Description textStyle="md" pb={20} color="fg">
+					{event.blurb}
+				</Card.Description>
 			</Card.Body>
 			<Card.Footer>
 				<EventButtons eventId={event.id} userTeam={userTeam} />

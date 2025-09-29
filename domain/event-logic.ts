@@ -7,11 +7,8 @@ dayjs.extend(isSameOrAfter);
 
 export const EventLogic = {
 	isPast: <T extends Event>(event: T) => !EventLogic.isUpcoming(event),
-	isUpcoming: <T extends Event>({ start_date, end_time }: T) => {
-		const start = dayjs(start_date)
-			.startOf("day")
-			.set("hours", end_time.getHours())
-			.set("minutes", end_time.getMinutes());
+	isUpcoming: <T extends Event>(event: T) => {
+		const start = EventLogic.getStartDateTime(event);
 		const now = dayjs(Date.now());
 		return start > now;
 	},
@@ -28,4 +25,10 @@ export const EventLogic = {
 			sortBy([prop("start_date"), "desc"]),
 			take(10),
 		),
+	getStartDateTime: <T extends Event>({ start_date, end_time }: T) => {
+		return dayjs(start_date)
+			.startOf("day")
+			.set("hours", end_time.getHours())
+			.set("minutes", end_time.getMinutes());
+	},
 };
