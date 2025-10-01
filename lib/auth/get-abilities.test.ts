@@ -1,4 +1,4 @@
-import type { Event, Team } from "@/database/models";
+import type { Event, Team } from "@/prisma/types";
 import { describe, expect, test } from "vitest";
 import { CRUDActions, getAbilities, type RawClaim } from "./get-abilities";
 
