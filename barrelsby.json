@@ -2,6 +2,7 @@
   "directory": [
     "./components",
     "./recipes",
+    "./hooks",
     "./lib/auth"
   ],
   "barrelName": "index.ts",
