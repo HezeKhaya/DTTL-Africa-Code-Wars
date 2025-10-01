@@ -19,23 +19,19 @@ describe("getAbilities", () => {
 	} as unknown as Event;
 
 	const stubAuthorizedClaims: RawClaim = {
-		claims: { app_metadata: { admin: false, roles: {} } },
+		app_metadata: { admin: false, roles: {} },
 	};
 
 	const stubAdminClaims: RawClaim = {
-		claims: { app_metadata: { admin: true, roles: {} } },
+		app_metadata: { admin: true, roles: {} },
 	};
 
 	const stubCaptainClaims: RawClaim = {
-		claims: {
-			app_metadata: { admin: false, roles: { captain: [stubTeam.id] } },
-		},
+		app_metadata: { admin: false, roles: { captain: [stubTeam.id] } },
 	};
 
 	const stubMemberClaims: RawClaim = {
-		claims: {
-			app_metadata: { admin: false, roles: { member: [stubTeam.id] } },
-		},
+		app_metadata: { admin: false, roles: { member: [stubTeam.id] } },
 	};
 
 	test("is should prevent all actions for unauthorized users", () => {

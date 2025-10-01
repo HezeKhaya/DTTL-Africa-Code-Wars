@@ -1,37 +1,58 @@
 import type { Event } from "@/prisma/types";
-import { addDays } from "date-fns";
+import { afterEach, before, beforeEach } from "node:test";
+import type * as DateFns from "date-fns";
+import { addDays, isPast } from "date-fns";
 import { range } from "remeda";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { EventLogic } from "./event-logic";
 
-describe("EventLogic", () => {
-	const now = new Date(2025, 1, 1, 13, 0);
+const now = new Date(2025, 1, 1, 13, 0);
 
+vi.mock("date-fns", async (importOriginal: () => Promise<typeof DateFns>) => {
+	const mod = await importOriginal();
+	return {
+		...mod,
+		isPast: (date: string | number | Date) => new Date(date) < now,
+	};
+});
+
+describe("EventLogic", () => {
 	const stubUpcomingEvent = {
 		start_date: addDays(now, 1),
+		start_time: new Date(0, 0, 0, 11, 30),
 		end_time: new Date(0, 0, 0, 13, 30),
 	} as unknown as Event;
 
 	const stubFutureEvent = {
-		start_date: addDays(now, 1),
+		start_date: addDays(now, 5),
+		start_time: new Date(0, 0, 0, 12, 30),
 		end_time: new Date(0, 0, 0, 14, 30),
 	} as unknown as Event;
 
-	const makePastEvent = (age: number) =>
+	const makePastEvent = (daysAgo: number) =>
 		({
-			id: age.toString(),
-			start_date: addDays(now, age),
+			id: daysAgo.toString(),
+			start_date: addDays(now, -daysAgo),
+			start_time: new Date(0, 0, 0, 7, 30),
 			end_time: new Date(0, 0, 0, 9, 30),
 		}) as unknown as Event;
 
 	const stubPastEvent = makePastEvent(1);
 
-	beforeAll(() => {
+	beforeEach(() => {
+		vi.useFakeTimers();
 		vi.setSystemTime(now);
 	});
 
-	afterAll(() => {
+	afterEach(() => {
 		vi.useRealTimers();
+		vi.clearAllMocks();
+	});
+
+	describe("test", () => {
+		it("should set time of to the start_time", () => {
+			expect(isPast(addDays(now, 1))).toBeFalsy();
+		});
 	});
 
 	describe("isPast", () => {

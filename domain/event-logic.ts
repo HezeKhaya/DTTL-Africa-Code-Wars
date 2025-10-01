@@ -1,4 +1,5 @@
 import type { Event } from "@/prisma/types";
+import { isPast } from "date-fns";
 import { getHours, getMinutes, setHours, setMinutes } from "date-fns/fp";
 import { filter, firstBy, pipe, piped, prop, sortBy, take } from "remeda";
 
@@ -6,17 +7,16 @@ const setTime = (source: Date) =>
 	piped(setHours(getHours(source)), setMinutes(getMinutes(source)));
 
 export const EventLogic = {
-	isPast: <T extends Event>(event: T) => !EventLogic.isUpcoming(event),
-	isUpcoming: <T extends Event>(event: T) => {
-		const start = EventLogic.getStartDateTime(event);
-		const now = new Date();
-		return start > now;
+	isPast: <T extends Event>(event: T) => {
+		const end = EventLogic.getEndDateTime(event);
+		return isPast(end);
 	},
+	isUpcoming: <T extends Event>(event: T) => !EventLogic.isPast(event),
 	getNextEvent: <T extends Event>(events: T[]) =>
 		pipe(
 			events,
 			filter(EventLogic.isUpcoming),
-			firstBy([prop("start_date"), "desc"]),
+			firstBy([prop("start_date"), "asc"]),
 		),
 	getPastEvents: <T extends Event>(events: T[]) =>
 		pipe(
@@ -26,6 +26,9 @@ export const EventLogic = {
 			take(10),
 		),
 	getStartDateTime: <T extends Event>({ start_date, start_time }: T) => {
+		return setTime(start_time)(start_date);
+	},
+	getEndDateTime: <T extends Event>({ start_date, start_time }: T) => {
 		return setTime(start_time)(start_date);
 	},
 };
