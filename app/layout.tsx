@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import { createClient } from "@/lib/supabase/server";
 import { Container, Flex } from "@chakra-ui/react";
 import { Inter } from "next/font/google";
@@ -43,6 +44,7 @@ export default async function RootLayout({
 							{modals}
 						</Container>
 					</Flex>
+					<Toaster />
 				</Provider>
 			</body>
 		</html>

@@ -3,52 +3,31 @@
 import { PrismaClient } from "@/generated/prisma";
 import { getUserId } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { createSubmission as createSubmissionMutation } from "@/prisma/mutations/create-submission";
+import {
+	type CreateSubmissionPayload,
+	createSubmission as createSubmissionMutation,
+} from "@/prisma/mutations/create-submission";
 import { createSubmissionPayloadSchema } from "@/schemas/create-submission-payload-schema";
-import { mapValues } from "remeda";
-import "server-only";
-import z from "zod";
 
-type FormState =
+type CreateSubmissionResult =
 	| {
 			success: false;
 			error: string;
-			fields?: Record<string, string>;
-			errors?: Record<string, string>;
 	  }
-	| { success: true; submissionId: number };
+	| { success: true; submissionId: bigint };
 
 export async function createSubmission(
-	_prevState: FormState,
-	payload: FormData,
-): Promise<FormState> {
+	payload: Omit<CreateSubmissionPayload, "submitted_by">,
+): Promise<CreateSubmissionResult> {
 	const supabase = await createClient();
 	const submitted_by = await getUserId(supabase);
 
-	if (!(payload instanceof FormData)) {
-		return {
-			success: false,
-			error: "Invalid form data",
-		};
-	}
-
-	const formData = Object.fromEntries(payload.entries());
-
-	const parsed = createSubmissionPayloadSchema.safeParse(formData);
+	const parsed = createSubmissionPayloadSchema.safeParse(payload);
 
 	if (!parsed.success) {
-		const { properties = {} } = z.treeifyError(parsed.error);
-		const fields: Record<string, string> = {};
-
-		for (const key of Object.keys(formData)) {
-			fields[key] = formData[key].toString();
-		}
-
 		return {
 			success: false,
-			fields,
-			error: "",
-			errors: mapValues(properties, (val) => val.errors[0]),
+			error: parsed.error.issues[0].message,
 		};
 	}
 
@@ -60,7 +39,7 @@ export async function createSubmission(
 			submitted_by,
 		});
 
-		return { success: true, submissionId: Number(result.id) };
+		return { success: true, submissionId: result.id };
 	} catch {
 		return {
 			success: false,

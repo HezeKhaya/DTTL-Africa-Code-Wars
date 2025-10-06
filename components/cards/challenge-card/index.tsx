@@ -1,6 +1,6 @@
-import { ChallengeLogic } from "@/domain/challenge-logic";
 import type { Challenge } from "@/prisma/types";
 import { Card } from "@chakra-ui/react";
+import { SubmitSolutionButton } from "./components/submit-solution-button";
 
 interface ChallengeCardProps {
 	challenge: Challenge;
@@ -8,12 +8,13 @@ interface ChallengeCardProps {
 }
 
 export function ChallengeCard({ challenge, teamId }: ChallengeCardProps) {
-	const isActive = teamId && ChallengeLogic.isActive(teamId)(challenge);
 	return (
 		<Card.Root>
 			<Card.Header>
 				<Card.Title>{challenge.name}</Card.Title>
-				<Card.Footer></Card.Footer>
+				<Card.Footer justifyContent="flex-start">
+					<SubmitSolutionButton challenge={challenge} teamId={teamId} />
+				</Card.Footer>
 			</Card.Header>
 		</Card.Root>
 	);
