@@ -24,7 +24,6 @@ export const getEventById =
 					select: {
 						id: true,
 						name: true,
-						slug: true,
 						submissions: true,
 						value: true,
 					},

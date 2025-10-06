@@ -72,7 +72,11 @@ export function SubmitSolutionButton({
 		}
 
 		const result = await withBusy(
-			createSubmission({ challenge_id: challenge.id, team_id: teamId }),
+			createSubmission({
+				challenge_id: challenge.id,
+				team_id: teamId,
+				challenge_slug: challenge.slug,
+			}),
 		);
 
 		if (result.success) {

@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@/generated/prisma";
 
 export type CreateSubmissionPayload = {
-	challenge_id: bigint;
+	challenge_id: string;
 	team_id: string;
 	submitted_by: string;
 };
