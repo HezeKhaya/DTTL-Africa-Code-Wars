@@ -27,7 +27,7 @@ export async function TeamChallenges({ eventId, teamId }: TeamChallengesProps) {
 		: [];
 
 	return (
-		<Card.Root>
+		<Card.Root variant="subtle">
 			<Card.Header>
 				<Card.Title>Challenges</Card.Title>
 			</Card.Header>

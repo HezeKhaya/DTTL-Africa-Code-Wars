@@ -2,6 +2,7 @@
 
 import { createSubmission } from "@/actions/challenge-actions";
 import { toaster } from "@/components/ui/toaster";
+import { ChallengeLogic } from "@/domain/challenge-logic";
 import { useBusy } from "@/hooks/use-busy";
 import type { Challenge } from "@/prisma/types";
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
@@ -19,16 +20,17 @@ export function SubmitSolutionButton({
 	const { isBusy: isSubmitting, withBusy } = useBusy();
 	const [open, setOpen] = useState(false);
 
-	if (!teamId) {
+	const submitted =
+		teamId && ChallengeLogic.isCompletedByTeam(teamId)(challenge);
+
+	if (submitted) {
 		return null;
 	}
 
 	return (
 		<Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
 			<Dialog.Trigger asChild>
-				<Button variant="outline" size="sm">
-					Submit
-				</Button>
+				<Button size="sm">Submit</Button>
 			</Dialog.Trigger>
 			<Portal>
 				<Dialog.Backdrop />
