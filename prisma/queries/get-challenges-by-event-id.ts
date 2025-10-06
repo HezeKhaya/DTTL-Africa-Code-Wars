@@ -12,6 +12,6 @@ export const getChallengesByEventId =
 			},
 		});
 
-export type Team = Awaited<
+export type ChallengeWithSubmission = Awaited<
 	ReturnType<ReturnType<typeof getChallengesByEventId>>
->;
+>[0];

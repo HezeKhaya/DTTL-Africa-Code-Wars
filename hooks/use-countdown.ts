@@ -26,7 +26,7 @@ function calculateRemaining(reference: Date) {
 	const start = new Date();
 
 	if (start > reference) {
-		return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+		return { days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: true };
 	}
 
 	const interval = { start: new Date(), end: reference };
@@ -37,7 +37,7 @@ function calculateRemaining(reference: Date) {
 		0,
 	);
 
-	return { days, hours, minutes, seconds };
+	return { days, hours, minutes, seconds, isComplete: false };
 }
 
 function formatCountDown(countdown: Countdown) {

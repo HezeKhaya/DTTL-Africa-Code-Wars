@@ -6,6 +6,7 @@ import { ChallengeLogic } from "@/domain/challenge-logic";
 import { useBusy } from "@/hooks/use-busy";
 import type { Challenge } from "@/prisma/types";
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface SubmitSolutionButtonProps {
@@ -19,6 +20,7 @@ export function SubmitSolutionButton({
 }: SubmitSolutionButtonProps) {
 	const { isBusy: isSubmitting, withBusy } = useBusy();
 	const [open, setOpen] = useState(false);
+	const { refresh } = useRouter();
 
 	const submitted =
 		teamId && ChallengeLogic.isCompletedByTeam(teamId)(challenge);
@@ -75,7 +77,6 @@ export function SubmitSolutionButton({
 			createSubmission({
 				challenge_id: challenge.id,
 				team_id: teamId,
-				challenge_slug: challenge.slug,
 			}),
 		);
 
@@ -85,6 +86,8 @@ export function SubmitSolutionButton({
 				description: "Submission created",
 				type: "success",
 			});
+
+			refresh();
 		} else {
 			toaster.create({
 				description: `Submission failed: ${result.error}`,

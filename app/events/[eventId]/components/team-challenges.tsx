@@ -1,24 +1,18 @@
 import { ChallengeCard } from "@/components/cards/challenge-card";
 import { ChallengeLogic } from "@/domain/challenge-logic";
-import { PrismaClient } from "@/generated/prisma";
-import { getChallengesByEventId } from "@/prisma/queries/get-challenges-by-event-id";
+import type { ChallengeWithSubmission } from "@/prisma/queries/get-challenges-by-event-id";
 import { Card } from "@chakra-ui/react";
 
 interface TeamChallengesProps {
-	eventId: string;
+	challenges: ChallengeWithSubmission[];
 	teamId: string | undefined;
 }
 
-export async function TeamChallenges({ eventId, teamId }: TeamChallengesProps) {
-	const prismaClient = new PrismaClient();
-	const challenges = await getChallengesByEventId(prismaClient)(
-		eventId,
-		teamId
-			? {
-					team_id: teamId,
-				}
-			: undefined,
-	);
+export function TeamChallenges({ challenges, teamId }: TeamChallengesProps) {
+	if (!teamId) {
+		return null;
+	}
+
 	const activeChallenge = teamId
 		? ChallengeLogic.getActiveChallenge(teamId)(challenges)
 		: undefined;

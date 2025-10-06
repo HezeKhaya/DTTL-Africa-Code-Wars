@@ -1,12 +1,13 @@
 "use server";
 
 import { PrismaClient } from "@/generated/prisma";
-import { getUserId } from "@/lib/auth";
+import { getAbilities, getClaims, getUserId } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import {
 	type CreateSubmissionPayload,
 	createSubmission as createSubmissionMutation,
 } from "@/prisma/mutations/create-submission";
+import { deleteChallenge as deleteChallengeMutation } from "@/prisma/mutations/delete-challenge";
 import { getTeamUserNames } from "@/prisma/queries/get-team-user-names";
 import { completeChallengesResponseSchema } from "@/schemas/codewars";
 import { createSubmissionPayloadSchema } from "@/schemas/create-submission-payload-schema";
@@ -72,6 +73,31 @@ export async function createSubmission(
 		};
 	}
 }
+
+export async function deleteChallenge(id: string) {
+	const supabase = await createClient();
+	const abilities = getAbilities(await getClaims(supabase));
+
+	if (!abilities.can("update", "Event")) {
+		return { success: false as const, error: "Unauthorised" };
+	}
+
+	const prismaClient = new PrismaClient();
+
+	try {
+		await deleteChallengeMutation(prismaClient)(id);
+
+		return { success: true as const };
+	} catch (error) {
+		console.error(error);
+
+		return {
+			success: false as const,
+			error: "Internal server error",
+		};
+	}
+}
+
 async function verifySubmission(
 	userNames: string[],
 	payload: Omit<CreateSubmissionPayload, "submitted_by">,
