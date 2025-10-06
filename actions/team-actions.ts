@@ -20,8 +20,6 @@ export async function createTeamAction(
 	_prevState: FormState,
 	payload: FormData,
 ): Promise<FormState> {
-	console.log("payload received", payload);
-
 	if (!(payload instanceof FormData)) {
 		return {
 			success: false,

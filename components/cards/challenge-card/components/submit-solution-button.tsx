@@ -1,11 +1,12 @@
 "use client";
 
 import { createSubmission } from "@/actions/challenge-actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toaster } from "@/components/ui/toaster";
 import { ChallengeLogic } from "@/domain/challenge-logic";
 import { useBusy } from "@/hooks/use-busy";
 import type { Challenge } from "@/prisma/types";
-import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -30,42 +31,17 @@ export function SubmitSolutionButton({
 	}
 
 	return (
-		<Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
-			<Dialog.Trigger asChild>
-				<Button size="sm">Submit</Button>
-			</Dialog.Trigger>
-			<Portal>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>
-						<Dialog.Header>
-							<Dialog.Title>Submit Solution</Dialog.Title>
-						</Dialog.Header>
-						<Dialog.Body>
-							This will inform the event organiser that you are ready for your
-							solution to be verified. Continue?
-						</Dialog.Body>
-						<Dialog.Footer>
-							<Dialog.ActionTrigger asChild>
-								<Button disabled={isSubmitting} variant="outline">
-									Cancel
-								</Button>
-							</Dialog.ActionTrigger>
-							<Button
-								loading={isSubmitting}
-								loadingText="Submitting..."
-								onClick={submitSolution}
-							>
-								Ok
-							</Button>
-						</Dialog.Footer>
-						<Dialog.CloseTrigger asChild>
-							<CloseButton size="sm" />
-						</Dialog.CloseTrigger>
-					</Dialog.Content>
-				</Dialog.Positioner>
-			</Portal>
-		</Dialog.Root>
+		<ConfirmDialog
+			heading="Submit Solution"
+			message="This will inform the event organiser that you are ready for your solution to be verified. Continue?"
+			open={open}
+			onOpenChange={(e) => setOpen(e.open)}
+			loading={isSubmitting}
+			loadingText="Submitting..."
+			onConfirm={submitSolution}
+		>
+			<Button size="sm">Submit</Button>
+		</ConfirmDialog>
 	);
 
 	async function submitSolution() {
