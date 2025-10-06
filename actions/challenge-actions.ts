@@ -8,6 +8,7 @@ import {
 	createSubmission as createSubmissionMutation,
 } from "@/prisma/mutations/create-submission";
 import { createSubmissionPayloadSchema } from "@/schemas/create-submission-payload-schema";
+import { isUniqueConstraintError } from "./utils";
 
 type CreateSubmissionResult =
 	| {
@@ -40,7 +41,14 @@ export async function createSubmission(
 		});
 
 		return { success: true, submissionId: result.id };
-	} catch {
+	} catch (error) {
+		if (isUniqueConstraintError(error)) {
+			return {
+				success: false,
+				error: "Already submitted",
+			};
+		}
+
 		return {
 			success: false,
 			error: "Internal server error",
