@@ -1,7 +1,9 @@
 "use client";
 
 import { createTeamAction } from "@/actions/team-actions";
+import { useHookFormAction } from "@/hooks/use-hook-form-action";
 import type { User } from "@/prisma/queries/get-users";
+import { createTeamPayloadSchema } from "@/schemas/create-team-payload-schema";
 import {
 	Button,
 	ButtonGroup,
@@ -15,7 +17,7 @@ import {
 	Wrap,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { LuCrown } from "react-icons/lu";
 import { filter, find, map, pipe, prop, sortBy } from "remeda";
 
@@ -30,22 +32,23 @@ export function CreateTeamForm({
 	userId,
 	availableTeamMembers,
 }: CreateTeamFormProps) {
-	const [formState, formAction, isPending] = useActionState(createTeamAction, {
-		success: false,
-		error: "",
-	});
-	const [selectedTeamMemberIds, setSelectedTeamMemberIds] = useState<string[]>(
-		[],
-	);
 	const router = useRouter();
-
-	useEffect(() => {
-		if (formState.success) {
-			router.push(`/events/${eventId}/teams/${formState.teamId}`);
-		}
-	}, [formState, eventId, router.push]);
-
-	const errors = formState.success ? {} : (formState.errors ?? {});
+	const handleSuccess = useCallback(
+		({ teamId }: { teamId: string }) =>
+			router.push(`/events/${eventId}/teams/${teamId}`),
+		[eventId, router.push],
+	);
+	const { formAction, handleSubmit, errors, isPending } = useHookFormAction({
+		schema: createTeamPayloadSchema,
+		action: createTeamAction,
+		options: {
+			defaultValues: {
+				event_id: eventId,
+				captain_id: userId,
+			},
+		},
+		onSuccess: handleSuccess,
+	});
 
 	const { contains } = useFilter({ sensitivity: "base" });
 
@@ -55,7 +58,7 @@ export function CreateTeamForm({
 	});
 
 	return (
-		<form action={formAction}>
+		<form action={formAction} onSubmit={handleSubmit}>
 			<Stack gap="4" align="stretch" maxW="sm">
 				<Input name="event_id" defaultValue={eventId} display="none" />
 				<Input name="captain_id" defaultValue={userId} display="none" />
