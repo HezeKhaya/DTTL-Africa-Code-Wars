@@ -3,20 +3,25 @@
 import { useCountDown } from "@/hooks";
 import { Card, CardBody, Heading, Text } from "@chakra-ui/react";
 
-export function Locked({ startDateTime }: { startDateTime: Date }) {
+export function ChallengeCountdown({ startDateTime }: { startDateTime: Date }) {
 	const { countdown, format } = useCountDown(startDateTime);
 
 	return (
 		<Card.Root>
-			<CardBody>
+			<CardBody my={20}>
 				<Card.Title
 					alignItems="center"
 					justifyContent="center"
 					display="flex"
 					flexDir="column"
 				>
-					<Text>Challenges unlocking in:</Text>
-					<Heading as="p" suppressHydrationWarning textStyle="6xl">
+					<Text>Challenges unlock in:</Text>
+					<Heading
+						as="p"
+						suppressHydrationWarning
+						textStyle="6xl"
+						fontFamily="monospace"
+					>
 						{format(countdown)}
 					</Heading>
 				</Card.Title>

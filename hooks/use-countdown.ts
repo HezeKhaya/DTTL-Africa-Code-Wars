@@ -23,10 +23,19 @@ export const useCountDown = (referenceDate: Date) => {
 };
 
 function calculateRemaining(reference: Date) {
+	const start = new Date();
+
+	if (start > reference) {
+		return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+	}
+
 	const interval = { start: new Date(), end: reference };
 	const { hours = 0, minutes = 0, seconds = 0 } = intervalToDuration(interval);
 
-	const days = differenceInCalendarDays(interval.end, interval.start);
+	const days = Math.max(
+		differenceInCalendarDays(interval.end, interval.start) - 1,
+		0,
+	);
 
 	return { days, hours, minutes, seconds };
 }

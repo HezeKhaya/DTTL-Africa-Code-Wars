@@ -7,11 +7,6 @@ const setTime = (source: Date) =>
 	piped(setHours(getHours(source)), setMinutes(getMinutes(source)));
 
 export const EventLogic = {
-	isPast: <T extends Event>(event: T) => {
-		const end = EventLogic.getEndDateTime(event);
-		return isPast(end);
-	},
-	isUpcoming: <T extends Event>(event: T) => !EventLogic.isPast(event),
 	getNextEvent: <T extends Event>(events: T[]) =>
 		pipe(
 			events,
@@ -31,4 +26,9 @@ export const EventLogic = {
 	getEndDateTime: <T extends Event>({ start_date, start_time }: T) => {
 		return setTime(start_time)(start_date);
 	},
+	isPast: <T extends Event>(event: T) => {
+		const end = EventLogic.getEndDateTime(event);
+		return isPast(end);
+	},
+	isUpcoming: <T extends Event>(event: T) => !EventLogic.isPast(event),
 };

@@ -5,7 +5,8 @@ import { getUserId } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getEventById } from "@/prisma/queries/get-event-by-id";
 import { Grid, GridItem, Stack } from "@chakra-ui/react";
-import { Locked } from "./components/challenges";
+import { ChallengeCountdown } from "./components/challenge-countdown";
+import { TeamChallenges } from "./components/team-challenges";
 
 export default async function EventPage({
 	params,
@@ -30,8 +31,13 @@ export default async function EventPage({
 				<GridItem colSpan={3}>
 					<EventCard event={event} userTeam={userTeam} flexGrow={1} />
 				</GridItem>
+				{/* <GridItem colSpan={2}>
+					<ChallengeCountdown
+						startDateTime={EventLogic.getStartDateTime(event)}
+					></ChallengeCountdown>
+				</GridItem> */}
 				<GridItem colSpan={2}>
-					<Locked startDateTime={EventLogic.getStartDateTime(event)}></Locked>
+					<TeamChallenges eventId={eventId} teamId={userTeam?.id} />
 				</GridItem>
 			</Grid>
 		</Stack>
