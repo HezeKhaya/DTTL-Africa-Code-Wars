@@ -1,6 +1,7 @@
 import { ExternalLink } from "@/components";
 import type { Challenge } from "@/prisma/types";
 import { Card, HStack, Spacer } from "@chakra-ui/react";
+import { AddButton } from "./components/add-button";
 import { DeleteButton } from "./components/delete-button";
 import { SubmitSolutionButton } from "./components/submit-solution-button";
 import { SubmittedBadge } from "./components/submitted-badge";
@@ -22,6 +23,7 @@ export function ChallengeCard({ challenge, teamId }: ChallengeCardProps) {
 							{challenge.name}
 						</ExternalLink>
 						<DeleteButton challenge={challenge} />
+						<AddButton eventId={challenge.event_id} />
 						<Spacer />
 						<SubmittedBadge challenge={challenge} teamId={teamId} />
 					</HStack>

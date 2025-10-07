@@ -54,6 +54,7 @@ export function CreateTeamForm({
 		filter: contains,
 	});
 
+	// TODO: Test team submission
 	return (
 		<form action={formAction}>
 			<Stack gap="4" align="stretch" maxW="sm">
@@ -64,7 +65,7 @@ export function CreateTeamForm({
 					<Input name="name" placeholder="Enter a team name" />
 					<Field.ErrorText>{errors.name}</Field.ErrorText>
 				</Field.Root>
-				<Field.Root invalid={!!errors.member_ids}>
+				<Field.Root invalid={!!errors.team_ids}>
 					<Field.Label>Team Members</Field.Label>
 					<Combobox.Root
 						multiple
@@ -73,6 +74,7 @@ export function CreateTeamForm({
 						positioning={{ strategy: "fixed", hideWhenDetached: true }}
 						value={selectedTeamMemberIds}
 						onValueChange={handleValueChange}
+						name="team_ids"
 					>
 						<Wrap gap="2">
 							<Tag.Root>
@@ -111,7 +113,7 @@ export function CreateTeamForm({
 							</Combobox.Content>
 						</Combobox.Positioner>
 					</Combobox.Root>
-					<Field.ErrorText>{errors.member_ids}</Field.ErrorText>
+					<Field.ErrorText>{errors.team_ids}</Field.ErrorText>
 				</Field.Root>
 
 				{/* TODO: Add error text for general error */}

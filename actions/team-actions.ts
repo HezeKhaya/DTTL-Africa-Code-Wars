@@ -1,25 +1,20 @@
 "use server";
 
 import { PrismaClient } from "@/generated/prisma";
-import { createTeam } from "@/prisma/mutations/create-team";
-import { createTeamPayloadSchema } from "@/schemas/create-team-payload-schema";
+import {
+	type CreateTeamPayload,
+	createTeam,
+	createTeamPayloadSchema,
+} from "@/prisma/mutations/create-team";
 import { mapValues } from "remeda";
 import "server-only";
 import z from "zod";
-
-type FormState =
-	| {
-			success: false;
-			error: string;
-			fields?: Record<string, string>;
-			errors?: Record<string, string>;
-	  }
-	| { success: true; teamId: string };
+import type { FormState } from "./types";
 
 export async function createTeamAction(
-	_prevState: FormState,
+	_prevState: FormState<CreateTeamPayload, { teamId: string }>,
 	payload: FormData,
-): Promise<FormState> {
+): Promise<FormState<CreateTeamPayload, { teamId: string }>> {
 	if (!(payload instanceof FormData)) {
 		return {
 			success: false,
@@ -41,7 +36,6 @@ export async function createTeamAction(
 
 		return {
 			success: false,
-			fields,
 			error: "",
 			errors: mapValues(properties, (val) => val.errors[0]),
 		};
