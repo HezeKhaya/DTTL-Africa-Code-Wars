@@ -10,7 +10,5 @@ export const createTeamPayloadSchema = z.object({
 		.max(100, "Less than 100 characters"),
 	captain_id: guidSchema,
 	event_id: guidSchema,
-	member_ids: z.array(guidSchema).optional(),
+	team_ids: z.array(guidSchema).optional(),
 });
-
-export type CreateTeamPayload = z.infer<typeof createTeamPayloadSchema>;

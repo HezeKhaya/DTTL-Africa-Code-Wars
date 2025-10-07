@@ -1,5 +1,11 @@
 import type { PrismaClient, Role } from "@/generated/prisma";
-import type { CreateTeamPayload } from "@/schemas/create-team-payload-schema";
+
+export type CreateTeamPayload = {
+	name: string;
+	captain_id: string;
+	event_id: string;
+	member_ids?: string[];
+};
 
 export const createTeam =
 	(prismaClient: PrismaClient) =>
